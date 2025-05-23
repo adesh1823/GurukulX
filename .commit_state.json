@@ -1,0 +1,13 @@
+{
+  "completed_files": [
+    "node_modules\\.pnpm\\react-katex@3.1.0_prop-types@15.8.1_react@19.1.0\\node_modules\\katex\\src\\fonts\\generate_fonts.py",
+    "node_modules\\katex\\src\\metrics\\format_json.py",
+    "node_modules\\.pnpm\\react-katex@3.1.0_prop-types@15.8.1_react@19.1.0\\node_modules\\katex\\src\\metrics\\format_json.py",
+    "node_modules\\.pnpm\\katex@0.16.22\\node_modules\\katex\\src\\metrics\\format_json.py",
+    "node_modules\\.pnpm\\katex@0.16.22\\node_modules\\katex\\src\\fonts\\generate_fonts.py",
+    "hello.py"
+  ],
+  "partial_methods": {},
+  "start_time": 1748010603.05941,
+  "current_wait_until": 1748011601.922149
+}
