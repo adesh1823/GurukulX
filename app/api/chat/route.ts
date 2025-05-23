@@ -3,7 +3,7 @@ import Groq from "groq-sdk"
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: "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",
+  apiKey: "",
 })
 
 // Define the system prompt for Qwen models
