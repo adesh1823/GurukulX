@@ -104,13 +104,7 @@ export function Sidebar() {
                 isActive={pathname === "/research-support/summarize"}
                 isChild
               />
-              <NavItem
-                href="/research-support/paraphrase"
-                icon={FileEdit}
-                title="Paraphrase & Grammar"
-                isActive={pathname === "/research-support/paraphrase"}
-                isChild
-              />
+            
               <NavItem
                 href="/research-support/flowchart"
                 icon={Network}
