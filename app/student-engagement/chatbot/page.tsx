@@ -153,10 +153,11 @@ export default function QuestionPaperGenerator() {
         >
         
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <GradientText>Question Paper Generator</GradientText>
+            <GradientText>Question Paper Generator</GradientText> <span className="text-yellow-500">(Beta)</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Create and edit professional question papers with advanced mathematical notations and AI assistance.
+            Create and edit professional question papers with advanced mathematical notations and AI assistance
+            <span className="text-yellow-500"> some editor features are under testing</span>
           </p>
         </motion.div>
 

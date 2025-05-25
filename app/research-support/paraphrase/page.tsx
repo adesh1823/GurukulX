@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Textarea } from "@/components/ui/textarea"
 import { Loader2, FileText, ArrowDown, Upload } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GradientText } from "@/components/ui/gradient-text"
 const pdfjsLib = require('pdfjs-dist/build/pdf')
 import mammoth from "mammoth"
@@ -14,25 +13,48 @@ import mammoth from "mammoth"
 // Set up pdf.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`
 
-export default function SummarizePapers() {
-  const [paperText, setPaperText] = useState("")
-  const [summaryLength, setSummaryLength] = useState("medium")
+export default function ParaphraseText() {
+  const [inputText, setInputText] = useState("")
+  const [wordCount, setWordCount] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [summary, setSummary] = useState<string | null>(null)
+  const [paraphrasedText, setParaphrasedText] = useState<string | null>(null)
   const [displayedLines, setDisplayedLines] = useState<string[]>([])
   const [fileName, setFileName] = useState<string | null>(null)
   const { toast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Handle line-by-line animation when summary changes
+  // Word count limit
+  const MAX_WORDS = 250
+
+  // Handle text input with word count limit
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value
+    const words = text.split(/\s+/).filter(word => word.length > 0)
+    if (words.length > MAX_WORDS) {
+      toast({
+        title: "Word Limit Exceeded",
+        description: `Input cannot exceed ${MAX_WORDS} words. Please shorten your text.`,
+        variant: "destructive",
+      })
+      // Keep only the first 250 words
+      const truncatedText = words.slice(0, MAX_WORDS).join(" ")
+      setInputText(truncatedText)
+      setWordCount(MAX_WORDS)
+    } else {
+      setInputText(text)
+      setWordCount(words.length)
+    }
+  }
+
+  // Handle line-by-line animation when paraphrasedText changes
   useEffect(() => {
-    if (!summary) {
+    if (!paraphrasedText) {
       setDisplayedLines([])
       return
     }
 
-    // Split summary into lines (by newline or sentence-ending punctuation)
-    const lines = summary
+    // Split paraphrasedText into lines (by newline or sentence-ending punctuation)
+    const lines = paraphrasedText
       .split(/\n+|\.\s+/)
       .map(line => line.trim())
       .filter(line => line.length > 0)
@@ -45,7 +67,7 @@ export default function SummarizePapers() {
         setDisplayedLines(prev => [...prev, line])
       }, index * 500) // 500ms delay per line
     })
-  }, [summary])
+  }, [paraphrasedText])
 
   // Handle file upload and text extraction
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +76,8 @@ export default function SummarizePapers() {
 
     setFileName(file.name)
     setIsLoading(true)
-    setPaperText("") // Clear existing text
+    setInputText("") // Clear existing text
+    setWordCount(0)
 
     try {
       let extractedText = ""
@@ -86,10 +109,22 @@ export default function SummarizePapers() {
         throw new Error("Unsupported file type. Please upload a PDF or Word (.docx) file.")
       }
 
-      setPaperText(extractedText)
+      // Truncate to 250 words if necessary
+      const words = extractedText.split(/\s+/).filter(word => word.length > 0)
+      if (words.length > MAX_WORDS) {
+        extractedText = words.slice(0, MAX_WORDS).join(" ")
+        toast({
+          title: "Word Limit Applied",
+          description: `Uploaded file text was truncated to ${MAX_WORDS} words.`,
+          variant: "destructive",
+        })
+      }
+
+      setInputText(extractedText)
+      setWordCount(Math.min(words.length, MAX_WORDS))
       toast({
         title: "File Processed",
-        description: `Text extracted from ${file.name}. Ready to summarize.`,
+        description: `Text extracted from ${file.name}. Ready to paraphrase.`,
       })
     } catch (error) {
       console.error("Error extracting text:", error)
@@ -110,47 +145,46 @@ export default function SummarizePapers() {
     }
   }
 
-  const handleSummarize = async () => {
-    if (!paperText.trim()) {
+  const handleParaphrase = async () => {
+    if (!inputText.trim()) {
       toast({
         title: "Empty input",
-        description: "Please paste research paper text or upload a file to summarize.",
+        description: "Please paste text or upload a file to paraphrase.",
         variant: "destructive",
       })
       return
     }
 
     setIsLoading(true)
-    setSummary(null)
+    setParaphrasedText(null)
 
     try {
-      const response = await fetch("/api/summarize", {
+      const response = await fetch("/api/paraphraser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          paperText,
-          summaryLength,
+          text: inputText,
         }),
       })
 
       if (!response.ok) {
-        throw new Error("Failed to fetch summary")
+        throw new Error("Failed to fetch paraphrase")
       }
 
       const data = await response.json()
-      setSummary(data.summary)
+      setParaphrasedText(data.paraphrasedText)
 
       toast({
-        title: "Summary Generated",
-        description: "Your research paper has been successfully summarized.",
+        title: "Paraphrase Generated",
+        description: "Your text has been successfully paraphrased.",
       })
     } catch (error) {
-      console.error("Error summarizing text:", error)
+      console.error("Error paraphrasing text:", error)
       toast({
         title: "Error",
-        description: "Failed to summarize text. Please try again.",
+        description: "Failed to paraphrase text. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -162,19 +196,19 @@ export default function SummarizePapers() {
     <div className="container mx-auto">
       <div className="mb-8">
         <h1 className="text-5xl font-bold mb-2 text-center">
-          <GradientText>Summarize Research Papers</GradientText>
+          <GradientText>Paraphrase Text</GradientText>
         </h1>
-        <p className="text-muted-foreground text-center">
-          Upload a PDF/Word file or paste research paper text to get a concise, easy-to-understand summary.
+        <p className="text-red-500 text-center">
+        This is currently not very effective if you're simply looking to paraphrase text with targeting 0% AI detection. Use with caution
         </p>
       </div>
 
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Research Paper Input</CardTitle>
+            <CardTitle>Input Text</CardTitle>
             <CardDescription>
-              Upload a PDF or Word (.docx) file, or paste the text of the research paper you want to summarize.
+              Upload a PDF or Word (.docx) file, or paste text to paraphrase. Maximum 250 words.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -200,36 +234,28 @@ export default function SummarizePapers() {
                 </span>
               )}
             </div>
-            <Textarea
-              placeholder="Paste research paper text here, or upload a file above..."
-              value={paperText}
-              onChange={(e) => setPaperText(e.target.value)}
-              className="min-h-[200px]"
-              disabled={isLoading}
-            />
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Summary Length:</span>
-              <Select value={summaryLength} onValueChange={setSummaryLength} disabled={isLoading}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select length" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="short">Short (1-2 paragraphs)</SelectItem>
-                  <SelectItem value="medium">Medium (3-4 paragraphs)</SelectItem>
-                  <SelectItem value="detailed">Detailed (5+ paragraphs)</SelectItem>
-                </SelectContent>
-              </Select>
+            <div>
+              <Textarea
+                placeholder="Paste text here, or upload a file above (max 250 words)..."
+                value={inputText}
+                onChange={handleTextChange}
+                className="min-h-[200px]"
+                disabled={isLoading}
+              />
+              <p className="text-sm text-muted-foreground mt-2">
+                Word count: {wordCount}/{MAX_WORDS}
+              </p>
             </div>
-            <Button onClick={handleSummarize} disabled={isLoading || !paperText.trim()}>
+          </CardContent>
+          <CardFooter className="flex justify-end">
+            <Button onClick={handleParaphrase} disabled={isLoading || !inputText.trim()}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Summarizing...
+                  Paraphrasing...
                 </>
               ) : (
-                "Summarize Paper"
+                "Paraphrase Text"
               )}
             </Button>
           </CardFooter>
@@ -241,16 +267,16 @@ export default function SummarizePapers() {
 
         <Card className="bg-white">
           <CardHeader>
-            <CardTitle>Summary</CardTitle>
+            <CardTitle className="text-black">Paraphrased Text</CardTitle>
             <CardDescription>
-              A simplified summary of the research paper in easy-to-understand terms.
+              A paraphrased version of the input text, matching the input word count (up to 250 words).
             </CardDescription>
           </CardHeader>
           <CardContent className="bg-white">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-                <p className="text-muted-foreground">Generating summary...</p>
+                <p className="text-muted-foreground">Generating paraphrase...</p>
               </div>
             ) : displayedLines.length > 0 ? (
               <div className="prose prose-sm max-w-none text-black">
@@ -264,10 +290,10 @@ export default function SummarizePapers() {
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <FileText className="h-16 w-16 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground mb-2">
-                  Your summary will appear here after you submit a research paper.
+                  Your paraphrased text will appear here after you submit the input.
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  The AI will break down complex research into simple, understandable language.
+                  The AI will rephrase the text while maintaining the original meaning and word count.
                 </p>
               </div>
             )}
@@ -280,7 +306,7 @@ export default function SummarizePapers() {
                   navigator.clipboard.writeText(displayedLines.join("\n"))
                   toast({
                     title: "Copied",
-                    description: "Summary copied to clipboard",
+                    description: "Paraphrased text copied to clipboard",
                   })
                 }}
               >
@@ -292,7 +318,7 @@ export default function SummarizePapers() {
       </div>
 
       <div className="mt-12 p-6 bg-accent rounded-lg">
-        <h2 className="text-xl font-bold mb-4"> uploading pdf or word files, you can also generate a pdf from the summary using a button in the summary section, Tips for Better Summaries</h2>
+        <h2 className="text-xl font-bold mb-4">Tips for Better Paraphrasing</h2>
         <ul className="space-y-2">
           <li className="flex items-start gap-2">
             <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
@@ -304,25 +330,13 @@ export default function SummarizePapers() {
             <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
               <div className="h-2 w-2 rounded-full bg-primary"></div>
             </div>
-            <span>Include the abstract and conclusion for more accurate summaries</span>
+            <span>Ensure the text is well-structured and grammatically correct for better results</span>
           </li>
           <li className="flex items-start gap-2">
             <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
               <div className="h-2 w-2 rounded-full bg-primary"></div>
             </div>
-            <span>Paste the full text or upload complete documents for comprehensive analysis</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-              <div className="h-2 w-2 rounded-full bg-primary"></div>
-            </div>
-            <span>Choose the appropriate summary length based on your needs</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-              <div className="h-2 w-2 rounded-full bg-primary"></div>
-            </div>
-            <span>For technical papers, include the methodology section for better context</span>
+            <span>Input is limited to 250 words; longer files will be truncated</span>
           </li>
         </ul>
       </div>

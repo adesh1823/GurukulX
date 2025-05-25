@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -21,6 +20,9 @@ import {
   Sparkles,
   FileEdit,
   GraduationCap,
+  DollarSign,
+  Lock,
+  Network,
 } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 
@@ -39,11 +41,31 @@ export function Sidebar() {
           <h2 className="mb-2 px-2 text-lg font-semibold">Features</h2>
           <div className="space-y-1">
             <NavItem
+              href="/pricing"
+              icon={DollarSign}
+              title="Pricing"
+              isActive={pathname === "/pricing"}
+            />
+            <NavItem
+              href="/pricing"
+              icon={DollarSign}
+              title="SmileRate"
+              isActive={pathname === "/pricing"}
+              isChild
+            />
+            <NavItem
               href="/lesson-planning"
               icon={BookOpen}
               title="Lesson Planning"
               isActive={pathname === "/lesson-planning"}
             >
+              <NavItem
+                href="/student-engagement/chatbot"
+                icon={MessageSquare}
+                title="Question paper Gen"
+                isActive={pathname === "/student-engagement/chatbot"}
+                isChild
+              />
               <NavItem
                 href="/lesson-planning/create"
                 icon={Presentation}
@@ -52,10 +74,10 @@ export function Sidebar() {
                 isChild
               />
               <NavItem
-                href="/lesson-planning/slides"
+                href="/lesson-planning/whiteboard"
                 icon={Presentation}
-                title="Generate Slides"
-                isActive={pathname === "/lesson-planning/slides"}
+                title="Whiteboard"
+                isActive={pathname === "/lesson-planning/whiteboard"}
                 isChild
               />
               <NavItem
@@ -67,34 +89,7 @@ export function Sidebar() {
               />
             </NavItem>
 
-            <NavItem
-              href="/student-engagement"
-              icon={Users}
-              title="Student Engagement"
-              isActive={pathname === "/student-engagement"}
-            >
-              <NavItem
-                href="/student-engagement/chatbot"
-                icon={MessageSquare}
-                title="AI Tutor Chatbot"
-                isActive={pathname === "/student-engagement/chatbot"}
-                isChild
-              />
-              <NavItem
-                href="/student-engagement/adaptive"
-                icon={GraduationCap}
-                title="Adaptive Learning"
-                isActive={pathname === "/student-engagement/adaptive"}
-                isChild
-              />
-              <NavItem
-                href="/student-engagement/study-guides"
-                icon={BookMarked}
-                title="Study Guides"
-                isActive={pathname === "/student-engagement/study-guides"}
-                isChild
-              />
-            </NavItem>
+    
 
             <NavItem
               href="/research-support"
@@ -116,29 +111,50 @@ export function Sidebar() {
                 isActive={pathname === "/research-support/paraphrase"}
                 isChild
               />
+              <NavItem
+                href="/research-support/flowchart"
+                icon={Network}
+                title="Flowchart"
+                isActive={pathname === "/research-support/flowchart"}
+                isChild
+              />
             </NavItem>
 
-            <NavItem href="/ai-assistants" icon={Bot} title="AI Assistants" isActive={pathname === "/ai-assistants"}>
+            <NavItem
+              href="/ai-assistants"
+              icon={Bot}
+              title="AI Assistants"
+              isActive={pathname === "/ai-assistants"}
+            >
               <NavItem
-                href="/ai-assistants/voice"
+                href="/ai-assistants/coding"
                 icon={Mic}
-                title="Voice Assistant"
-                isActive={pathname === "/ai-assistants/voice"}
+                title="Coding Assistant"
+                isActive={pathname === "/ai-assistants/coding"}
                 isChild
               />
+            </NavItem>
+            <NavItem
+              href=""
+              icon={Users}
+              title="Student Engagement"
+              isLocked
+            >
               <NavItem
-                href="/ai-assistants/vision"
-                icon={ImageIcon}
-                title="Vision Assistant"
-                isActive={pathname === "/ai-assistants/vision"}
+                href="/student-engagement/adaptive"
+                icon={GraduationCap}
+                title="Adaptive Learning"
+                isActive={pathname === "/student-engagement/adaptive"}
                 isChild
+                isLocked
               />
               <NavItem
-                href="/ai-assistants/customize"
-                icon={Sparkles}
-                title="Customize Assistant"
-                isActive={pathname === "/ai-assistants/customize"}
+                href="/student-engagement/study-guides"
+                icon={BookMarked}
+                title="Study Guides"
+                isActive={pathname === "/student-engagement/study-guides"}
                 isChild
+                isLocked
               />
             </NavItem>
           </div>
@@ -154,23 +170,42 @@ interface NavItemProps {
   title: string
   isActive?: boolean
   isChild?: boolean
+  isLocked?: boolean
+  comingSoon?: boolean
   children?: React.ReactNode
 }
 
-function NavItem({ href, icon: Icon, title, isActive, isChild, children }: NavItemProps) {
+function NavItem({
+  href,
+  icon: Icon,
+  title,
+  isActive,
+  isChild,
+  isLocked,
+  comingSoon,
+  children,
+}: NavItemProps) {
   return (
     <div>
-      <Link href={href} passHref>
+      <Link href={isLocked ? "#" : href} passHref>
         <Button
           variant="ghost"
           className={cn(
-            "w-full justify-start",
-            isActive ? "bg-accent text-accent-foreground" : "transparent",
+            "w-full justify-start relative",
+            isActive && !isLocked ? "bg-accent text-accent-foreground" : "transparent",
             isChild ? "pl-8" : "pl-2",
+            isLocked ? "opacity-50 cursor-not-allowed" : "",
           )}
+          disabled={isLocked}
         >
           <Icon className={cn("mr-2 h-4 w-4", isChild ? "opacity-70" : "")} />
           <span className={cn(isChild ? "text-sm" : "")}>{title}</span>
+          {isLocked && <Lock className="ml-2 h-4 w-4 opacity-70" />}
+          {comingSoon && !isChild && (
+            <span className="ml-2 inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+              Coming Soon
+            </span>
+          )}
         </Button>
       </Link>
       {children && <div className="mt-1">{children}</div>}

@@ -4,23 +4,27 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { BookOpen, Users, FileText, Bot, Menu, X } from "lucide-react"
+import { BookOpen, Users, FileText, Bot, Menu, X, Globe, DollarSign ,Network} from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
+import { GradientText } from "./ui/gradient-text"
+import Image from "next/image"
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
   const navItems = [
+    { name: "Pricing", href: "/pricing", icon: DollarSign },
     { name: "Lesson Planning", href: "/lesson-planning", icon: BookOpen },
-    { name: "Student Engagement", href: "/student-engagement", icon: Users },
-    { name: "Research Support", href: "/research-support", icon: FileText },
+    { name: "Research Support", href: "/research-support/summarize", icon: FileText },
     { name: "AI Assistants", href: "/ai-assistants", icon: Bot },
+    { name: "Flowchart Gen", href: "/research-support/flowchart", icon: Network, external: true },
+    { name: "Developer Portfolio", href: "https://arav-portfolio.vercel.app/", icon: Globe, external: true },
+    
   ]
 
-  // Animation variants for mobile menu
   const mobileMenuVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: {
@@ -46,16 +50,21 @@ export default function Header() {
         >
           <Link href="/" className="flex items-center gap-2 group">
             <motion.div
-              className="rounded-full bg-primary p-1.5"
+              className="rounded-full bg-transparent size-10"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <BookOpen className="h-6 w-6 text-white animate-[pulse_2s_infinite]" />
+              <Image
+                src="/logooo.png"
+                alt="TeachAI Logo"
+                width={40}
+                height={40}
+              />
             </motion.div>
-            <span className="ml-2 font-bold text-lg group-hover:text-primary transition-colors hidden md:inline-block">
-              TeachAI
-            </span>
+            <h1 className=" mr-3 font-bold text-2xl group-hover:text-primary transition-colors bg-gradient from-purple-500 to-blue-500 hidden md:inline-block">
+              <GradientText>GurukulX</GradientText>
+            </h1>
           </Link>
         </motion.div>
 
@@ -75,10 +84,11 @@ export default function Header() {
                     "relative flex items-center gap-2 text-sm font-medium transition-colors",
                     isActive ? "text-primary" : "text-muted-foreground hover:text-primary",
                     "after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300",
-                    isActive ? "after:w-full" : "after:w-0 hover:after:w-full"
+                    isActive && !item.external ? "after:w-full" : "after:w-0 hover:after:w-full",
                   )}
+                  {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 >
-                  <item.icon className="h-4 w-4" />
+                  <item.icon className="h-5 w-5" />
                   {item.name}
                 </Link>
               </motion.div>
@@ -94,10 +104,7 @@ export default function Header() {
             className="md:hidden rounded-full hover:bg-accent/50 transition-all"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            <motion.div
-              animate={{ rotate: mobileMenuOpen ? 90 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div animate={{ rotate: mobileMenuOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </motion.div>
           </Button>
@@ -120,10 +127,11 @@ export default function Header() {
                     href={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors",
-                      isActive
+                      isActive && !item.external
                         ? "bg-primary/10 text-primary border-l-4 border-primary"
                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
                     )}
+                    {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <item.icon className="h-5 w-5" />

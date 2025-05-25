@@ -2,12 +2,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Mic, ImageIcon, Bot, Sparkles } from "lucide-react"
+import type { FC } from "react"
+import { GradientText } from "@/components/ui/gradient-text"
 
-export default function AIAssistantsPage() {
+const AIAssistantsPage: FC = () => {
   return (
     <div className="container mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">AI Assistants</h1>
+        <h1 className="mt-1 text-5xl font-bold mb-2 text-center"> <GradientText>AI Assistants</GradientText></h1>
         <p className="text-muted-foreground">
           Powerful AI assistants to help with various teaching tasks, from analyzing images to voice-enabled commands.
         </p>
@@ -16,19 +18,46 @@ export default function AIAssistantsPage() {
       <div className="relative h-[300px] mb-12 rounded-xl overflow-hidden bg-gradient-to-r from-primary/5 to-purple-600/5 flex items-center justify-center">
         <div className="text-center">
           <Sparkles className="mx-auto h-16 w-16 text-primary mb-4" />
-          <h2 className="text-2xl font-bold">AI Assistants</h2>
+          <h2 className="text-2xl font-bold text-centre">AI Assistants</h2>
           <p className="mt-2">Intelligent tools to enhance your teaching experience</p>
         </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="card-hover">
+      <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <Bot className="h-6 w-6" />
+            </div>
+            <CardTitle>Coding Assistant</CardTitle>
+            <CardDescription>
+              Generate, debug, and understand code for your educational projects with Gurukul-1.0.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Powered by Gurukul-1.0, the Coding Assistant helps educators and students create code for interactive
+              learning tools, debug complex algorithms, and understand programming concepts through clear explanations
+              and examples. Whether you're building a web app for classroom engagement or teaching Python basics, this
+              assistant provides tailored code snippets and guidance.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/ai-assistants/coding" className="w-full">
+              <Button className="w-full">Try Coding Assistant</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="card-hover relative">
           <CardHeader>
             <div className="feature-icon">
               <Mic className="h-6 w-6" />
             </div>
             <CardTitle>Voice Assistant</CardTitle>
-            <CardDescription>Use voice commands to generate content and control your teaching tools.</CardDescription>
+            <CardDescription>
+              Use voice commands to generate content and control your teaching tools.{" "}
+              <span className="text-yellow-500 font-semibold">Coming Soon</span>
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
@@ -37,19 +66,22 @@ export default function AIAssistantsPage() {
             </p>
           </CardContent>
           <CardFooter>
-            <Link href="/ai-assistants/voice" className="w-full">
-              <Button className="w-full">Try Voice Assistant</Button>
-            </Link>
+            <Button className="w-full" disabled>
+              Try Voice Assistant
+            </Button>
           </CardFooter>
         </Card>
 
-        <Card className="card-hover">
+        <Card className="card-hover relative">
           <CardHeader>
             <div className="feature-icon">
               <ImageIcon className="h-6 w-6" />
             </div>
             <CardTitle>Vision Assistant</CardTitle>
-            <CardDescription>Upload images and get AI-powered analysis and explanations.</CardDescription>
+            <CardDescription>
+              Upload images and get AI-powered analysis and explanations.{" "}
+              <span className="text-yellow-500 font-semibold">Coming Soon</span>
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
@@ -57,31 +89,13 @@ export default function AIAssistantsPage() {
             </p>
           </CardContent>
           <CardFooter>
-            <Link href="/ai-assistants/vision" className="w-full">
-              <Button className="w-full">Try Vision Assistant</Button>
-            </Link>
+            <Button className="w-full" disabled>
+              Try Vision Assistant
+            </Button>
           </CardFooter>
         </Card>
 
-        <Card className="card-hover">
-          <CardHeader>
-            <div className="feature-icon">
-              <Bot className="h-6 w-6" />
-            </div>
-            <CardTitle>Customize Assistant</CardTitle>
-            <CardDescription>Train the AI on your teaching style for personalized outputs.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Create a custom AI assistant that understands your preferences, teaching methods, and subject expertise.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Link href="/ai-assistants/customize" className="w-full">
-              <Button className="w-full">Customize Assistant</Button>
-            </Link>
-          </CardFooter>
-        </Card>
+       
       </div>
 
       <div className="mt-12 p-6 bg-accent rounded-lg">
@@ -116,3 +130,5 @@ export default function AIAssistantsPage() {
     </div>
   )
 }
+
+export default AIAssistantsPage

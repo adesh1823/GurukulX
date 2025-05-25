@@ -4,16 +4,17 @@ import Groq from "groq-sdk"
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: "",
+  apiKey: process.env.GROQ_API_KEY,
 })
 
 // Define the system prompt for Qwen models
-const SYSTEM_PROMPT = `You are an expert programming instructor providing detailed coding assistance for college students and professionals. Respond to the user's query in the specified programming language. Structure your response using Markdown formatting as follows:
+const SYSTEM_PROMPT = `You are an expert programming instructor providing detailed coding assistance for college students and professionals. Respond to the user's query in the specified programming language. Structure your response using Markdown formatting as follows and dont use ** notations in response.:
 
 ### Concept Explanation
 - Explain the core concept or problem clearly and concisely.
 - Use analogies or real-world examples to make it relatable.
 - Mention how this concept fits into broader programming principles, if applicable.
+
 
 ### Working Code Example
 Provide a complete, well-commented code snippet in the specified programming language that directly addresses the query. Ensure the code is clean, follows best practices, and is easy to understand. Use code blocks with the appropriate language specifier (e.g., \`\`\`javascript).
@@ -25,6 +26,7 @@ Provide a complete, well-commented code snippet in the specified programming lan
 ### Best Practices
 - List 2-3 best practices related to the concept or code.
 - Explain why these practices matter and how they improve the code.
+- dont use ** notations in response.
 
 ### Common Pitfalls
 - Identify 1-2 common mistakes learners might make.
@@ -75,7 +77,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Select model based on thinkingMode
-    const model = thinkingMode ? "qwen-qwq-32b" : "llama3-70b-8192";
+    const model = thinkingMode ? "qwen-qwq-32b" : "llama-3.3-70b-versatile";
 
     // Call Groq API
     const completion = await groq.chat.completions.create({

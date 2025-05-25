@@ -2,12 +2,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Presentation, FileQuestion, BookOpen } from "lucide-react"
+import { GradientText } from "@/components/ui/gradient-text"
 
 export default function LessonPlanningPage() {
   return (
     <div className="container mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Lesson Planning & Content Generation</h1>
+        <h1 className="mt-1 text-5xl font-bold mb-2 text-center"><GradientText>Lesson Planning & Content Generation</GradientText></h1>
         <p className="text-muted-foreground">
           Create AI-generated lesson plans, slide decks, and worksheets tailored to your curriculum and learning
           objectives.
@@ -53,18 +54,18 @@ export default function LessonPlanningPage() {
             <div className="feature-icon">
               <Presentation className="h-6 w-6" />
             </div>
-            <CardTitle>Generate Slides</CardTitle>
-            <CardDescription>Create slide deck content for presentations based on your topic outline.</CardDescription>
+            <CardTitle>Whiteboard</CardTitle>
+            <CardDescription>Create interactive whiteboard content for presentations based on your topic outline.</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Get AI-generated slide content with titles, main points, and visual suggestions ready for your
+              Get AI-generated whiteboard content with titles, main points, and visual suggestions ready for your
               presentations.
             </p>
           </CardContent>
           <CardFooter>
-            <Link href="/lesson-planning/slides" className="w-full">
-              <Button className="w-full">Generate Slides</Button>
+            <Link href="/lesson-planning/whiteboard" className="w-full">
+              <Button className="w-full">Whiteboard</Button>
             </Link>
           </CardFooter>
         </Card>
