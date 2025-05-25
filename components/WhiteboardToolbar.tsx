@@ -86,12 +86,12 @@ export function WhiteboardToolbar({
           initial={{ y: -100 }}
           animate={{ y: 0 }}
           exit={{ y: -100 }}
-          className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 p-4 shadow-lg z-40"
+          className="bg-gray-950 dark:bg-gray-800/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 p-4 shadow-lg z-40"
         >
           <div className="flex items-center justify-between">
             {/* Left Section - Drawing Tools */}
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+              <div className="flex items-center gap-1 bg-gray-950 dark:bg-gray-700 rounded-lg p-1">
                 {tools.map((tool) => (
                   <Button
                     key={tool.id}
@@ -126,7 +126,7 @@ export function WhiteboardToolbar({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-10 left-0 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-2 z-50"
+                      className="absolute top-10 left-0 bg-gray-950 dark:bg-gray-800 border rounded-lg shadow-lg p-2 z-50"
                     >
                       <div className="grid grid-cols-3 gap-1">
                         {shapes.map((shape) => (
@@ -173,7 +173,7 @@ export function WhiteboardToolbar({
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-10 left-0 bg-white dark:bg-gray-800 border rounded-lg shadow-lg p-3 z-50"
+                      className="absolute top-10 left-0 bg-gray-950 dark:bg-gray-800 border rounded-lg shadow-lg p-3 z-50"
                     >
                       <div className="grid grid-cols-5 gap-2 mb-3">
                         {colors.map((color) => (

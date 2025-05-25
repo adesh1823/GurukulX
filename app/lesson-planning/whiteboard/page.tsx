@@ -487,7 +487,7 @@ export default function AIWhiteboard() {
                   height: `${region.height}%`,
                 }}
               >
-                <div className="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-medium">
+                <div className="absolute top-2 left-2 bg-gray-950/90 px-2 py-1 rounded text-xs font-medium">
                   {region.name}
                 </div>
               </div>
@@ -498,7 +498,7 @@ export default function AIWhiteboard() {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full shadow-lg border p-2 flex items-center gap-2 z-20"
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-950 dark:bg-gray-800 rounded-full shadow-lg border p-2 flex items-center gap-2 z-20"
           >
             <Button variant="ghost" size="sm" onClick={() => setShowToolbar(!showToolbar)} className="h-8 w-8 p-0">
               {showToolbar ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
@@ -553,7 +553,7 @@ export default function AIWhiteboard() {
       />
 
       {/* Status Bar */}
-      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
+      <div className="bg-gray-950/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 flex-shrink-0">
         <div className="flex items-center gap-4">
           <span>Strokes: {whiteboardState.strokes.length}</span>
           <span>Texts: {whiteboardState.textElements.length}</span>

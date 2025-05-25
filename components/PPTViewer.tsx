@@ -969,7 +969,7 @@ export function PPTViewer({ isVisible, onClose, onSlideChange }: PPTViewerProps)
                           className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-1 bg-white dark:bg-gray-700 rounded-lg p-1">
+                            <div className="flex items-center gap-1 bg-gray-950 dark:bg-gray-700 rounded-lg p-1">
                               {[
                                 { id: "pen", icon: Pen, label: "Pen" },
                                 { id: "highlighter", icon: Highlighter, label: "Highlighter" },
@@ -1082,7 +1082,7 @@ export function PPTViewer({ isVisible, onClose, onSlideChange }: PPTViewerProps)
                     </div>
 
                     {/* Navigation Controls */}
-                    <div className="flex items-center justify-center gap-4 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+                    <div className="flex items-center justify-center gap-4 p-4 bg-gray-950 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
                       <Button variant="outline" onClick={prevSlide} disabled={currentSlideIndex === 0}>
                         <ChevronLeft className="h-4 w-4 mr-1" />
                         Previous
@@ -1113,7 +1113,7 @@ export function PPTViewer({ isVisible, onClose, onSlideChange }: PPTViewerProps)
                     initial={{ x: 400 }}
                     animate={{ x: 0 }}
                     exit={{ x: 400 }}
-                    className="w-96 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0"
+                    className="w-96 bg-gray-950 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0"
                   >
                     <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
                       <div className="flex items-center justify-between mb-4">
