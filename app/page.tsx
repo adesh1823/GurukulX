@@ -35,12 +35,17 @@ import {
   Network,
   Trophy,
   PartyPopper,
+  Wand2,
+  Sparkle,
+  Crown,
+  Sun,
 } from "lucide-react"
-import { Vortex } from "@/components/ui/vortex"
+import  Vortex  from "@/components/ui/vortex"
 import { GradientText } from "@/components/ui/gradient-text"
 import { motion, AnimatePresence } from "framer-motion"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
+
 // Skills data for infinite scroll
 const skills = [
   { icon: Code, name: "React/Next.js", color: "from-blue-500 to-cyan-500" },
@@ -54,121 +59,130 @@ const skills = [
   { icon: Network, name: "MCP Tool", color: "from-indigo-500 to-purple-500" },
 ]
 
-// Fun teacher quotes
+// Enhanced teacher quotes with more variety
 const teacherQuotes = [
-  "Coffee: Because teaching is hard! ☕",
-  "I survived another Monday! 🎉",
-  "Teaching: Where every day is an adventure! 🚀",
-  "Powered by coffee and student success! ⭐",
-  "Making learning fun, one lesson at a time! 🎯",
-  "Teaching is my superpower! 🦸‍♀️",
-  "Smiles are contagious – pass them on! 😊",
-  "Grading papers... send chocolate. 🍫",
-  "Changing the world, one student at a time. 🌍",
-  "It takes a big heart to shape little minds. ❤️",
-  "Learning is messy – and that's okay! 🖍️",
-  "Teaching is a work of heart. 💖",
-  "Teachers plant the seeds of knowledge. 🌱",
-  "Fueled by passion, driven by caffeine. ☕✨",
-  "Keep calm and teach on. 🧘‍♀️",
-  "Behind every successful student is a tired teacher. 😅",
-  "Every day is a chance to inspire! 💡",
-  "Mistakes are proof you are trying. ✏️",
-  "Friday: A teacher's second favorite F word. 😉",
-  "Teaching: The only job where you steal markers. 🖊️",
-  "Today's lesson: You're doing amazing! 👏",
-  "Warning: May spontaneously start talking about teaching! 🔊",
-  "The future of the world is in my classroom today. 🌟",
-  "If you can read this, thank a teacher! 📚",
-  "I teach. What's your superpower? 🦸‍♂️",
-  "Lesson plans and late nights = teacher life! 🌙",
-  "A+ for effort, teacher! 📝",
-  "Teaching is tough but so are you! 💪",
-  "Best classroom ever: mine. 😎",
-  "Smartboard warrior by day, grading ninja by night. 🥷",
-  "The influence of a teacher can never be erased. 🧼",
-  "Don't worry, I've got class! 🎓",
-  "Chalk dust and dreams. ✨",
-  "Today's agenda: changing lives. ✅",
-  "I may be a teacher, but I still learn every day! 📖",
-  "Alexa, grade these papers. 😂",
-  "Coffee first, questions later. ☕❓",
-  "This classroom runs on love and laughter. ❤️😂",
-  "Teaching: It's not a job, it's a calling. 📞",
-  "Oops! Did I say that out loud in class? 🙊",
-  "Making learning stick like glitter in a carpet. ✨",
-  "If teaching was easy, it would be called parenting. 😜",
-  "Don't make me use my teacher voice! 📢",
-  "Dear sleep, I miss you. Sincerely, teacher. 💤",
-  "Creativity is contagious – pass it on. 🎨",
-  "Smiling – it's part of my lesson plan! 😊",
-  "Rainy days = extra coffee days! ☔☕",
-  "I teach tiny humans. What's your excuse? 👶📚",
-  "A teacher's hug can fix anything. 🤗",
-  "High fives and happy vibes. ✋😄",
-  "Because kids deserve magical learning. 🧙‍♂️",
-  "Teachers: Making brains spark since forever. ⚡",
-  "Teaching with heart, humor, and lots of sticky notes! 💛📌",
+  "Brewing knowledge, one lesson at a time ☕✨",
+  "Making minds sparkle since forever! 🌟",
+  "Teaching: Where magic meets reality 🎭",
+  "Powered by passion, fueled by coffee ⚡☕",
+  "Creating tomorrow's leaders today 🚀",
+  "Every student is a story waiting to unfold 📖",
+  "Teaching is my superpower! What's yours? 🦸‍♀️",
+  "Turning 'I can't' into 'I did it!' 💪",
+  "Planting seeds of wisdom everywhere 🌱",
+  "Making learning an adventure! 🗺️",
 ]
 
-// Teacher mood booster data
+// Enhanced mood boosters with more interactive elements
 const moodBoosters = [
   {
-    title: "You're Amazing!",
-    message: "Every lesson you teach plants seeds of knowledge that will grow for a lifetime! 🌱",
-    icon: Trophy,
-    color: "from-yellow-400 to-orange-500",
+    title: "You're a Rockstar! 🌟",
+    message: "Every lesson you teach creates ripples of knowledge that will last forever! Your impact is immeasurable.",
+    icon: Crown,
+    color: "from-yellow-400 via-orange-500 to-red-500",
+    particles: ["⭐", "✨", "🌟", "💫"],
   },
   {
-    title: "Coffee Break!",
-    message: "Take a moment to appreciate how awesome you are. You deserve this break! ☕",
+    title: "Coffee & Courage! ☕",
+    message:
+      "Take a moment to appreciate the incredible educator you are. You deserve all the recognition in the world!",
     icon: Coffee,
-    color: "from-amber-600 to-yellow-500",
+    color: "from-amber-600 via-yellow-500 to-orange-400",
+    particles: ["☕", "🍪", "☀️", "🌻"],
   },
   {
-    title: "Student Success!",
-    message: "Remember that 'aha!' moment in class? That's the magic you create every day! ✨",
+    title: "Lightbulb Moments! 💡",
+    message: "Remember those amazing 'aha!' moments? That's the magic you create every single day in your classroom!",
     icon: Lightbulb,
-    color: "from-blue-400 to-purple-500",
+    color: "from-blue-400 via-purple-500 to-pink-500",
+    particles: ["💡", "⚡", "🔥", "✨"],
   },
   {
-    title: "You're Appreciated!",
-    message: "Your dedication doesn't go unnoticed. You're shaping the future, one student at a time! 🎯",
+    title: "Heart of Gold! 💖",
+    message: "Your dedication and love for teaching doesn't go unnoticed. You're shaping the future with every smile!",
     icon: Heart,
-    color: "from-pink-400 to-red-500",
+    color: "from-pink-400 via-red-500 to-purple-500",
+    particles: ["💖", "💝", "🌹", "🦋"],
   },
   {
-    title: "Celebration Time!",
-    message: "Every small victory in your classroom is worth celebrating. You're doing great! 🎉",
+    title: "Celebration Time! 🎉",
+    message:
+      "Every small victory, every breakthrough moment - they all deserve celebration. You're absolutely amazing!",
     icon: PartyPopper,
-    color: "from-purple-400 to-pink-500",
+    color: "from-purple-400 via-pink-500 to-red-400",
+    particles: ["🎉", "🎊", "🎈", "🎁"],
+  },
+  {
+    title: "Wisdom Wizard! 🧙‍♀️",
+    message: "You have the magical ability to transform confusion into clarity. That's pure wizardry right there!",
+    icon: Wand2,
+    color: "from-indigo-400 via-purple-500 to-blue-500",
+    particles: ["🔮", "⭐", "✨", "🌙"],
   },
 ]
 
-// Fun teaching facts
+// Fun teaching facts with emojis
 const teachingFacts = [
-  "Teachers touch the future! 🚀",
-  "You inspire 30+ minds daily! 🧠",
-  "Your patience is superhuman! 🦸‍♀️",
-  "You make learning magical! ✨",
-  "Coffee is your superpower! ☕",
-  "You're a knowledge ninja! 🥷",
-  "Creativity flows through you! 🎨",
-  "You turn chaos into learning! 🌪️",
-  "Your smile brightens days! 😊",
-  "You're a future architect! 🏗️",
+  "You inspire 30+ minds daily! 🧠✨",
+  "Your patience is superhuman! 🦸‍♀️💪",
+  "You make learning magical! 🎩✨",
+  "Coffee is your superpower! ☕⚡",
+  "You're a knowledge ninja! 🥷📚",
+  "Creativity flows through you! 🎨🌊",
+  "You turn chaos into learning! 🌪️➡️📖",
+  "Your smile brightens days! 😊☀️",
+  "You're a future architect! 🏗️🚀",
+  "Teaching is your art form! 🎭🎨",
 ]
 
 export default function Home() {
+  // Hydration-safe state initialization
   const [scrollY, setScrollY] = useState(0)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isClient, setIsClient] = useState(false)
   const [currentQuote, setCurrentQuote] = useState(0)
   const [currentMoodBooster, setCurrentMoodBooster] = useState(0)
   const [showCelebration, setShowCelebration] = useState(false)
   const [currentFact, setCurrentFact] = useState(0)
+  const [moodBoosterParticles, setMoodBoosterParticles] = useState<
+    Array<{ id: number; x: number; y: number; emoji: string }>
+  >([])
+  const Icon = moodBoosters[currentMoodBooster].icon;
+  // Hydration-safe parallax calculation
+  const calculateParallax = useCallback(
+    (depth = 20) => {
+      if (!isClient || typeof window === "undefined") {
+        return { x: 0, y: 0 }
+      }
+
+      const centerX = window.innerWidth / 2
+      const centerY = window.innerHeight / 2
+      const moveX = (mousePosition.x - centerX) / depth
+      const moveY = (mousePosition.y - centerY) / depth
+      return { x: moveX, y: moveY }
+    },
+    [isClient, mousePosition],
+  )
+
+  // Create mood booster particles
+  const createParticles = useCallback(() => {
+    if (!isClient) return
+
+    const particles = moodBoosters[currentMoodBooster].particles
+    const newParticles = Array.from({ length: 8 }, (_, i) => ({
+      id: Date.now() + i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      emoji: particles[Math.floor(Math.random() * particles.length)],
+    }))
+    setMoodBoosterParticles(newParticles)
+    setTimeout(() => setMoodBoosterParticles([]), 3000)
+  }, [currentMoodBooster, isClient])
 
   useEffect(() => {
+    // Set client flag after hydration
+    setIsClient(true)
+
     const handleScroll = () => {
       setScrollY(window.scrollY)
     }
@@ -177,37 +191,34 @@ export default function Home() {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
+    // Only add event listeners after hydration
     window.addEventListener("scroll", handleScroll)
     window.addEventListener("mousemove", handleMouseMove)
 
-    // Set loaded after a small delay to trigger animations
-    const timer = setTimeout(() => setIsLoaded(true), 100)
-
-    // Rotate quotes every 3 seconds
+    // Rotate quotes every 4 seconds
     const quoteTimer = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % teacherQuotes.length)
-    }, 3000)
+    }, 4000)
 
-    // Rotate mood boosters every 5 seconds
+    // Rotate mood boosters every 6 seconds
     const moodTimer = setInterval(() => {
       setCurrentMoodBooster((prev) => (prev + 1) % moodBoosters.length)
-    }, 5000)
+    }, 6000)
 
-    // Rotate teaching facts every 2 seconds
+    // Rotate teaching facts every 2.5 seconds
     const factTimer = setInterval(() => {
       setCurrentFact((prev) => (prev + 1) % teachingFacts.length)
-    }, 2000)
+    }, 2500)
 
-    // Random celebration every 15 seconds
+    // Random celebration every 20 seconds
     const celebrationTimer = setInterval(() => {
       setShowCelebration(true)
-      setTimeout(() => setShowCelebration(false), 3000)
-    }, 15000)
+      setTimeout(() => setShowCelebration(false), 4000)
+    }, 20000)
 
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("mousemove", handleMouseMove)
-      clearTimeout(timer)
       clearInterval(quoteTimer)
       clearInterval(moodTimer)
       clearInterval(factTimer)
@@ -215,49 +226,61 @@ export default function Home() {
     }
   }, [])
 
-  // Calculate parallax effect based on mouse position
-  const calculateParallax = (depth = 20) => {
-    if (typeof window === "undefined") return { x: 0, y: 0 }
-    const centerX = window.innerWidth / 2
-    const centerY = window.innerHeight / 2
-    const moveX = (mousePosition.x - centerX) / depth
-    const moveY = (mousePosition.y - centerY) / depth
-    return { x: moveX, y: moveY }
-  }
-
   return (
     <div className="min-h-screen">
-      {/* Celebration Overlay */}
+      {/* Enhanced Celebration Overlay */}
       <AnimatePresence>
-        {showCelebration && (
+        {showCelebration && isClient && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center"
           >
+            {/* Multiple celebration elements */}
             <motion.div
               initial={{ scale: 0, rotate: 0 }}
-              animate={{ scale: 1, rotate: 360 }}
-              exit={{ scale: 0, rotate: 720 }}
-              transition={{ duration: 1, type: "spring" }}
+              animate={{ scale: [0, 1.2, 1], rotate: [0, 360, 720] }}
+              exit={{ scale: 0, rotate: 1080 }}
+              transition={{ duration: 2, type: "spring" }}
               className="text-8xl"
             >
               🎉
             </motion.div>
             <motion.div
+              initial={{ scale: 0, rotate: 0 }}
+              animate={{ scale: [0, 1, 0.8], rotate: [0, -360, -720] }}
+              exit={{ scale: 0 }}
+              transition={{ duration: 2, delay: 0.2 }}
+              className="absolute text-6xl"
+              style={{ top: "30%", left: "20%" }}
+            >
+              ⭐
+            </motion.div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: [0, 1, 0.9] }}
+              exit={{ scale: 0 }}
+              transition={{ duration: 2, delay: 0.4 }}
+              className="absolute text-5xl"
+              style={{ top: "60%", right: "25%" }}
+            >
+              🌟
+            </motion.div>
+            <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -50, opacity: 0 }}
-              className="absolute mt-20 text-2xl font-bold text-yellow-300"
+              transition={{ delay: 0.5 }}
+              className="absolute mt-20 text-2xl font-bold bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent"
             >
-              You're Awesome, Teacher! 🌟
+              You're an Amazing Teacher! 🏆
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Hero Section with Vortex Background */}
+      {/* Hero Section with Enhanced Vortex Background */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <Vortex
           backgroundColor="transparent"
@@ -302,22 +325,25 @@ export default function Home() {
               designed specifically for Indian college educators.
             </motion.p>
 
-            {/* Fun Quote for Teachers */}
+            {/* Enhanced Fun Quote for Teachers */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
               className="mb-8"
             >
-              <motion.p
+              <motion.div
                 key={currentQuote}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="text-lg text-yellow-300 font-medium italic"
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 1.05 }}
+                className="relative inline-block"
               >
-                {teacherQuotes[currentQuote]}
-              </motion.p>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-full blur-xl"></div>
+                <p className="relative text-lg md:text-xl text-yellow-300 font-medium italic px-6 py-3 bg-black/20 rounded-full backdrop-blur-sm border border-yellow-400/30">
+                  {teacherQuotes[currentQuote]}
+                </p>
+              </motion.div>
             </motion.div>
 
             <motion.div
@@ -346,79 +372,151 @@ export default function Home() {
           </motion.div>
         </Vortex>
 
-        {/* Floating elements */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ delay: 1.2, duration: 1 }}
-          className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 z-0"
-          style={{ x: calculateParallax(30).x, y: calculateParallax(30).y }}
-        >
-          <div className="float-slow">
-            <Lightbulb className="h-16 w-16 text-yellow-300/30" />
-          </div>
-        </motion.div>
+        {/* Enhanced floating elements - Only render on client */}
+        {isClient && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 1.2, duration: 1 }}
+              className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 z-0"
+              style={{ 
+                transform: `translate(${calculateParallax(30).x}px, ${calculateParallax(30).y}px) translate(-50%, -50%)` 
+              }}
+            >
+              <motion.div
+                animate={{ 
+                  y: [0, -20, 0],
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{ 
+                  y: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                  rotate: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                  scale: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" }
+                }}
+              >
+                <Lightbulb className="h-16 w-16 text-yellow-300/30" />
+              </motion.div>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ delay: 1.4, duration: 1 }}
-          className="absolute bottom-1/4 right-1/4 transform translate-x-1/2 translate-y-1/2 z-0"
-          style={{ x: calculateParallax(20).x, y: calculateParallax(20).y }}
-        >
-          <div className="float">
-            <Brain className="h-20 w-20 text-purple-400/30" />
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 1.4, duration: 1 }}
+              className="absolute bottom-1/4 right-1/4 transform translate-x-1/2 translate-y-1/2 z-0"
+              style={{ 
+                transform: `translate(${calculateParallax(20).x}px, ${calculateParallax(20).y}px) translate(50%, 50%)` 
+              }}
+            >
+              <motion.div
+                animate={{ 
+                  y: [0, 15, 0],
+                  rotate: [0, -15, 15, 0],
+                  scale: [1, 0.9, 1.1, 1]
+                }}
+                transition={{ 
+                  y: { duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                  rotate: { duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                  scale: { duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" }
+                }}
+              >
+                <Brain className="h-20 w-20 text-purple-400/30" />
+              </motion.div>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ delay: 1.6, duration: 1 }}
-          className="absolute top-1/3 right-1/3 z-0"
-          style={{ x: calculateParallax(40).x, y: calculateParallax(40).y }}
-        >
-          <div className="float-fast">
-            <Zap className="h-12 w-12 text-blue-300/30" />
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 1.6, duration: 1 }}
+              className="absolute top-1/3 right-1/3 z-0"
+              style={{ 
+                transform: `translate(${calculateParallax(40).x}px, ${calculateParallax(40).y}px)` 
+              }}
+            >
+              <motion.div
+                animate={{ 
+                  rotate: [0, 360],
+                  scale: [1, 1.2, 0.8, 1]
+                }}
+                transition={{ 
+                  rotate: { duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear", type: "tween" },
+                  scale: { duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" }
+                }}
+              >
+                <Zap className="h-12 w-12 text-blue-300/30" />
+              </motion.div>
+            </motion.div>
+          </>
+        )}
       </section>
 
-      {/* Teacher Mood Booster Section */}
+      {/* Enhanced Teacher Mood Booster Section */}
       <section className="py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-900/5 to-orange-900/10 pointer-events-none"></div>
         
-        {/* Floating mood elements */}
-        <motion.div
-          animate={{ 
-            y: [0, -20, 0],
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{ 
-            duration: 4,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut"
-          }}
-          className="absolute top-10 right-10 text-4xl z-0"
-        >
-          ☀️
-        </motion.div>
-        
-        <motion.div
-          animate={{ 
-            y: [0, 15, 0],
-            x: [0, 10, 0]
-          }}
-          transition={{ 
-            duration: 3,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: 1
-          }}
-          className="absolute bottom-20 left-10 text-3xl z-0"
-        >
-          🌈
-        </motion.div>
+        {/* Enhanced floating mood elements - Only render on client */}
+        {isClient && (
+          <>
+            <motion.div
+              animate={{ 
+                y: [0, -30, 0],
+                rotate: [0, 10, -10, 0],
+                scale: [1, 1.2, 1]
+              }}
+              transition={{ 
+                y: { duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                rotate: { duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                scale: { duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" }
+              }}
+              className="absolute top-10 right-10 text-6xl z-0"
+            >
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+              >
+                ☀️
+              </motion.div>
+            </motion.div>
+            
+            <motion.div
+              animate={{ 
+                y: [0, 20, 0],
+                x: [0, 15, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ 
+                y: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                x: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                scale: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                delay: 1
+              }}
+              className="absolute bottom-20 left-10 text-5xl z-0"
+            >
+              🌈
+            </motion.div>
+          </>
+        )}
+
+        {/* Floating particles for mood booster */}
+        <AnimatePresence>
+          {moodBoosterParticles.map((particle) => (
+            <motion.div
+              key={particle.id}
+              initial={{ opacity: 0, scale: 0, x: particle.x + "%", y: particle.y + "%" }}
+              animate={{ 
+                opacity: [0, 1, 0],
+                scale: [0, 1.5, 0],
+                y: [particle.y + "%", (particle.y - 50) + "%"]
+              }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{ duration: 3, ease: "easeOut" }}
+              className="absolute text-2xl pointer-events-none z-20"
+            >
+              {particle.emoji}
+            </motion.div>
+          ))}
+        </AnimatePresence>
 
         <div className="container mx-auto relative z-10">
           <motion.div
@@ -428,16 +526,28 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <GradientText colors={["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1"]}>Teacher Mood Booster</GradientText>
-            </h2>
+            <motion.h2 
+              className="text-4xl md:text-6xl font-bold mb-6"
+              animate={isClient ? { 
+                textShadow: [
+                  "0 0 20px rgba(255, 215, 0, 0.5)",
+                  "0 0 40px rgba(255, 105, 180, 0.5)",
+                  "0 0 20px rgba(255, 215, 0, 0.5)"
+                ]
+              } : {}}
+              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, type: "tween" }}
+            >
+              <GradientText colors={["#FFD700", "#FF69B4", "#4ECDC4", "#45B7D1", "#FF6B6B"]}>
+                ✨ Teacher Mood Booster ✨
+              </GradientText>
+            </motion.h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Because every teacher deserves a daily dose of appreciation and joy! 🌟
+              Because every teacher deserves a daily dose of appreciation, joy, and magical moments! 🌟💖
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Main Mood Booster Card */}
+          <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+            {/* Enhanced Main Mood Booster Card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -447,166 +557,281 @@ export default function Home() {
             >
               <motion.div
                 key={currentMoodBooster}
-                initial={{ opacity: 0, rotateY: 90 }}
-                animate={{ opacity: 1, rotateY: 0 }}
-                transition={{ duration: 0.6 }}
-                className="glass-effect rounded-2xl p-8 relative overflow-hidden group h-full"
+                initial={{ opacity: 0, rotateY: 90, scale: 0.8 }}
+                animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                transition={{ duration: 0.8, type: "spring" }}
+                className="glass-effect rounded-3xl p-8 relative overflow-hidden group h-full min-h-[400px]"
+                whileHover={{ scale: 1.02 }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${moodBoosters[currentMoodBooster].color} opacity-10 group-hover:opacity-20 transition-opacity duration-500`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${moodBoosters[currentMoodBooster].color} opacity-15 group-hover:opacity-25 transition-opacity duration-500`}></div>
                 
-                <div className="relative z-10 text-center">
+                {/* Animated background pattern - Only render on client */}
+                {isClient && (
+                  <div className="absolute inset-0 opacity-10">
+                    {[...Array(20)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-2 h-2 bg-white rounded-full"
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
+                        animate={{
+                          scale: [0, 1, 0],
+                          opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Number.POSITIVE_INFINITY,
+                          delay: i * 0.2,
+                          type: "tween"
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                <div className="relative z-10 text-center h-full flex flex-col justify-center">
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
-                      rotate: [0, 5, -5, 0]
-                    }}
+                    animate={isClient ? { 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 360],
+                      y: [0, -10, 0]
+                    } : {}}
                     transition={{ 
-                      duration: 2,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut"
+                      scale: { duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
+                      rotate: { duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
+                      y: { duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }
                     }}
-                    className={`w-20 h-20 rounded-full bg-gradient-to-br ${moodBoosters[currentMoodBooster].color} flex items-center justify-center mx-auto mb-6`}
+                    className={`w-24 h-24 rounded-full bg-gradient-to-br ${moodBoosters[currentMoodBooster].color} flex items-center justify-center mx-auto mb-6 shadow-2xl`}
                   >
-                    <motion.div className={`h-10 w-10 text-white ${moodBoosters[currentMoodBooster].icon}`} key={currentMoodBooster}></motion.div>
+                    <motion.div 
+                      className="h-12 w-12 text-white"
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                    >
+                      <Icon className="h-12 w-12" />
+                    </motion.div>
                   </motion.div>
-                  
-                  <h3 className="text-2xl font-bold mb-4 text-white">
+
+                  <motion.h3
+                    className="text-3xl font-bold mb-6 text-white"
+                    animate={isClient ? {
+                      scale: [1, 1.05, 1]
+                    } : {}}
+                    transition={{
+                      scale: { duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" }
+                    }}
+                  >
                     {moodBoosters[currentMoodBooster].title}
-                  </h3>
+                  </motion.h3>
                   
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-gray-200 text-lg leading-relaxed mb-8 px-4">
                     {moodBoosters[currentMoodBooster].message}
                   </p>
                   
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setShowCelebration(true)}
-                    className="mt-6 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full font-semibold hover:shadow-lg transition-all duration-300"
+                    onClick={() => {
+                      setShowCelebration(true)
+                      createParticles()
+                    }}
+                    className={`mx-auto px-8 py-4 bg-gradient-to-r ${moodBoosters[currentMoodBooster].color} text-white rounded-full font-semibold hover:shadow-2xl transition-all duration-300 relative overflow-hidden group`}
                   >
-                    Spread the Joy! 🎉
+                    <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Sparkle className="h-5 w-5" />
+                      Spread the Magic! 
+                      <PartyPopper className="h-5 w-5" />
+                    </span>
                   </motion.button>
                 </div>
               </motion.div>
             </motion.div>
 
-            {/* Interactive Fun Zone */}
+            {/* Enhanced Interactive Fun Zone */}
             <div className="space-y-6">
-              {/* Teaching Facts Ticker */}
+              {/* Enhanced Teaching Facts Ticker */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="glass-effect rounded-xl p-6 relative overflow-hidden"
+                className="glass-effect rounded-2xl p-6 relative overflow-hidden group"
+                whileHover={{ scale: 1.02 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 group-hover:from-blue-600/20 group-hover:to-purple-600/20 transition-all duration-300"></div>
                 <div className="relative z-10">
-                  <h4 className="text-lg font-semibold mb-4 text-center">
+                  <h4 className="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2">
+                    <Trophy className="h-5 w-5 text-yellow-400" />
                     <GradientText>Quick Teacher Facts</GradientText>
+                    <Sparkles className="h-5 w-5 text-blue-400" />
                   </h4>
                   <motion.div
                     key={currentFact}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center text-xl font-medium text-yellow-300"
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, type: "tween" }}
+                    className="text-center text-xl font-medium text-yellow-300 bg-black/20 rounded-xl p-4 border border-yellow-400/30"
                   >
                     {teachingFacts[currentFact]}
                   </motion.div>
                 </div>
               </motion.div>
 
-              {/* Virtual Coffee Break */}
+              {/* Enhanced Virtual Coffee Break */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="glass-effect rounded-xl p-6 relative overflow-hidden group cursor-pointer"
-                whileHover={{ scale: 1.02 }}
+                className="glass-effect rounded-2xl p-6 relative overflow-hidden group cursor-pointer"
+                whileHover={{ scale: 1.02, y: -2 }}
+                onClick={createParticles}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-600/10 to-yellow-600/10 group-hover:from-amber-600/20 group-hover:to-yellow-600/20 transition-all duration-300"></div>
                 <div className="relative z-10 text-center">
                   <motion.div
-                    animate={{ 
-                      rotate: [0, 10, -10, 0],
-                      scale: [1, 1.05, 1]
-                    }}
+                    animate={isClient ? { 
+                      rotate: [0, 15, -15, 0],
+                      scale: [1, 1.1, 1],
+                      y: [0, -5, 0]
+                    } : {}}
                     transition={{ 
-                      duration: 2,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut"
+                      rotate: { duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                      scale: { duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" },
+                      y: { duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", type: "tween" }
                     }}
-                    className="text-4xl mb-3"
+                    className="text-5xl mb-4"
                   >
                     ☕
                   </motion.div>
-                  <h4 className="text-lg font-semibold mb-2 text-amber-300">Virtual Coffee Break</h4>
-                  <p className="text-gray-400 text-sm">Take a moment to breathe and appreciate yourself!</p>
+                  <h4 className="text-xl font-semibold mb-3 text-amber-300 flex items-center justify-center gap-2">
+                    <Coffee className="h-5 w-5" />
+                    Virtual Coffee Break
+                    <Sun className="h-5 w-5" />
+                  </h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    Take a moment to breathe, smile, and appreciate the incredible educator you are! ✨
+                  </p>
+                  <motion.div
+                    className="mt-3 text-xs text-amber-200 opacity-70"
+                    animate={isClient ? { opacity: [0.5, 1, 0.5] } : {}}
+                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, type: "tween" }}
+                  >
+                    Click for a surprise! 🎁
+                  </motion.div>
                 </div>
               </motion.div>
 
-              {/* Achievement Badge */}
+              {/* Enhanced Achievement Badge */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
                 viewport={{ once: true }}
-                className="glass-effect rounded-xl p-6 relative overflow-hidden"
+                className="glass-effect rounded-2xl p-6 relative overflow-hidden group"
+                whileHover={{ scale: 1.02 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10 group-hover:from-green-600/20 group-hover:to-emerald-600/20 transition-all duration-300"></div>
                 <div className="relative z-10 text-center">
                   <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
+                    animate={isClient ? { 
+                      scale: [1, 1.2, 1],
                       rotate: [0, 360]
-                    }}
+                    } : {}}
                     transition={{ 
-                      scale: { duration: 2, repeat: Number.POSITIVE_INFINITY },
-                      rotate: { duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "linear" }
+                      scale: { duration: 2, repeat: Number.POSITIVE_INFINITY, type: "tween" },
+                      rotate: { duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear", type: "tween" }
                     }}
-                    className="text-4xl mb-3"
+                    className="text-5xl mb-4"
                   >
                     🏆
                   </motion.div>
-                  <h4 className="text-lg font-semibold mb-2 text-green-300">Today's Achievement</h4>
-                  <p className="text-gray-400 text-sm">You showed up and made a difference!</p>
+                  <h4 className="text-xl font-semibold mb-3 text-green-300 flex items-center justify-center gap-2">
+                    <Crown className="h-5 w-5" />
+                    Today's Achievement
+                    <Star className="h-5 w-5" />
+                  </h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    You showed up, you cared, and you made a difference! That's pure excellence! 🌟
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* New Inspiration Generator */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                viewport={{ once: true }}
+                className="glass-effect rounded-2xl p-6 relative overflow-hidden group cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                onClick={() => setCurrentQuote(Math.floor(Math.random() * teacherQuotes.length))}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 group-hover:from-purple-600/20 group-hover:to-pink-600/20 transition-all duration-300"></div>
+                <div className="relative z-10 text-center">
+                  <motion.div
+                    animate={isClient ? { 
+                      rotate: [0, 360],
+                      scale: [1, 1.1, 1]
+                    } : {}}
+                    transition={{ 
+                      rotate: { duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "linear", type: "tween" },
+                      scale: { duration: 2, repeat: Number.POSITIVE_INFINITY, type: "tween" }
+                    }}
+                    className="text-4xl mb-4"
+                  >
+                    💫
+                  </motion.div>
+                  <h4 className="text-lg font-semibold mb-3 text-purple-300 flex items-center justify-center gap-2">
+                    <Wand2 className="h-5 w-5" />
+                    Inspiration Generator
+                    <Sparkles className="h-5 w-5" />
+                  </h4>
+                  <p className="text-gray-400 text-sm">
+                    Click for instant motivation and teaching wisdom! ✨
+                  </p>
                 </div>
               </motion.div>
             </div>
           </div>
 
-          {/* Floating Encouragement Bubbles */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ 
-                  opacity: [0, 1, 0],
-                  scale: [0, 1, 0],
-                  y: [0, -100],
-                  x: [0, Math.random() * 100 - 50]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 2,
-                  ease: "easeOut"
-                }}
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
-                style={{ left: `${20 + i * 15}%` }}
-              >
-                <div className="w-8 h-8 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white text-sm">
-                  {['💖', '⭐', '🌟', '✨', '🎯', '🚀'][i]}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {/* Enhanced Floating Encouragement Bubbles - Only render on client */}
+          {isClient && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ 
+                    opacity: [0, 1, 0],
+                    scale: [0, 1.2, 0],
+                    y: [0, -150],
+                    x: [0, Math.random() * 200 - 100]
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: i * 2.5,
+                    ease: "easeOut",
+                    type: "tween"
+                  }}
+                  className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
+                  style={{ left: `${15 + i * 12}%` }}
+                >
+                  <div className="w-10 h-10 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white text-lg shadow-lg">
+                    {['💖', '⭐', '🌟', '✨', '🎯', '🚀', '🎉', '💫'][i]}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
+      {/* Rest of the sections remain the same... */}
       {/* Features Section */}
       <section id="features" className="py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/10 pointer-events-none"></div>
@@ -853,32 +1078,40 @@ export default function Home() {
       <section className="py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 to-purple-900/20 pointer-events-none"></div>
 
-        {/* Floating background elements */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.3 }}
-          transition={{ duration: 2 }}
-          viewport={{ once: true }}
-          className="absolute top-10 left-10 z-0"
-          style={{ x: calculateParallax(50).x, y: calculateParallax(50).y }}
-        >
-          <div className="float-slow">
-            <Rocket className="h-24 w-24 text-purple-400/20" />
-          </div>
-        </motion.div>
+        {/* Floating background elements - Only render on client */}
+        {isClient && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.3 }}
+              transition={{ duration: 2 }}
+              viewport={{ once: true }}
+              className="absolute top-10 left-10 z-0"
+              style={{ 
+                transform: `translate(${calculateParallax(50).x}px, ${calculateParallax(50).y}px)` 
+              }}
+            >
+              <div className="float-slow">
+                <Rocket className="h-24 w-24 text-purple-400/20" />
+              </div>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.3 }}
-          transition={{ duration: 2, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="absolute bottom-10 right-10 z-0"
-          style={{ x: calculateParallax(30).x, y: calculateParallax(30).y }}
-        >
-          <div className="float">
-            <Star className="h-20 w-20 text-yellow-400/20" />
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.3 }}
+              transition={{ duration: 2, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="absolute bottom-10 right-10 z-0"
+              style={{ 
+                transform: `translate(${calculateParallax(30).x}px, ${calculateParallax(30).y}px)` 
+              }}
+            >
+              <div className="float">
+                <Star className="h-20 w-20 text-yellow-400/20" />
+              </div>
+            </motion.div>
+          </>
+        )}
 
         <div className="container mx-auto relative z-10">
           <motion.div
@@ -931,11 +1164,13 @@ export default function Home() {
                       />
                     </div>
                     </div>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                      className="absolute -inset-2 rounded-full border-2 border-dashed border-purple-400/30"
-                    ></motion.div>
+                    {isClient && (
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                        className="absolute -inset-2 rounded-full border-2 border-dashed border-purple-400/30"
+                      ></motion.div>
+                    )}
                   </motion.div>
 
                   <h3 className="text-3xl md:text-4xl font-bold mb-4">
@@ -946,7 +1181,7 @@ export default function Home() {
                   Everyone is a slave to something fear, power, love, approval.
                   Even those who claim to be free are chained by their desires.
                   But I've accepted my chains and turned them into weapons.
-                  Because the only true freedom… is choosing what you're willing to be a slave for nd never breaking ✨
+                  Because the only true freedom… is choosing what you're willing to be a slave for and never breaking ✨
                   </p>
 
                   {/* Fun Developer Stats */}
@@ -1029,10 +1264,8 @@ export default function Home() {
                   className="space-y-6"
                 >
                   <h4 className="text-2xl font-bold mb-6 text-center text-blue">
-                    <GradientText>Technologies & Skill</GradientText>
+                    <GradientText>Technologies & Skills</GradientText>
                   </h4>
-
-
 
                   {/* Infinite Scroll Skills */}
                   <div className="mb-8">
@@ -1053,7 +1286,7 @@ export default function Home() {
                           key={index}
                           initial={{ opacity: 0, x: 20 }}
                           whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
+                          transition={{ duration: 0.5, delay: 1 + index * 0.1, type: "tween" }}
                           viewport={{ once: true }}
                           className="flex items-center gap-3 text-gray-400 hover:text-gray-300 transition-colors cursor-pointer"
                           whileHover={{ x: 5 }}
@@ -1132,19 +1365,23 @@ export default function Home() {
       <footer className="relative py-16 px-4 border-t border-white/10">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-blue-900/10 pointer-events-none"></div>
 
-        {/* Floating footer elements */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.2 }}
-          transition={{ duration: 2 }}
-          viewport={{ once: true }}
-          className="absolute top-5 left-5 z-0"
-          style={{ x: calculateParallax(60).x, y: calculateParallax(60).y }}
-        >
-          <div className="float-slow">
-            <Star className="h-8 w-8 text-yellow-400/30" />
-          </div>
-        </motion.div>
+        {/* Floating footer elements - Only render on client */}
+        {isClient && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 0.2 }}
+            transition={{ duration: 2 }}
+            viewport={{ once: true }}
+            className="absolute top-5 left-5 z-0"
+            style={{ 
+              transform: `translate(${calculateParallax(60).x}px, ${calculateParallax(60).y}px)` 
+            }}
+          >
+            <div className="float-slow">
+              <Star className="h-8 w-8 text-yellow-400/30" />
+            </div>
+          </motion.div>
+        )}
 
         <div className="container mx-auto relative z-10">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
@@ -1209,14 +1446,12 @@ export default function Home() {
                   { name: "Coding Assistant", href: "ai-assistants/coding-assistant" },
                   { name: "Research Support", href: "/research-support/summarize" },
                   { name: "Flowchart Builder", href: "/research-support/flowchart" },
-            
-
                 ].map((link, index) => (
                   <motion.li
                     key={link.name}
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                    transition={{ duration: 0.5, delay: 0.2 + index * 0.1, type: "tween" }}
                     viewport={{ once: true }}
                   >
                     <Link

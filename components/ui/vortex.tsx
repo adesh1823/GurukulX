@@ -17,7 +17,7 @@ interface VortexProps {
   children?: React.ReactNode
 }
 
-export function Vortex({
+export default function Vortex({
   className = "",
   particleCount = 300,
   particleSize = 2,
