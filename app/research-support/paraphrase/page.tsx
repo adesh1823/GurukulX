@@ -9,6 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import { GradientText } from "@/components/ui/gradient-text"
 const pdfjsLib = require('pdfjs-dist/build/pdf')
 import mammoth from "mammoth"
+import dynamic from "next/dynamic"
+
+
 
 // Set up pdf.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`
