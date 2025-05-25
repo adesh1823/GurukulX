@@ -7,14 +7,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Loader2, FileText, ArrowDown, Upload } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { GradientText } from "@/components/ui/gradient-text"
-const pdfjsLib = require('pdfjs-dist/build/pdf')
 import mammoth from "mammoth"
-import dynamic from "next/dynamic"
+import type * as PDFJS from "pdfjs-dist"
 
-
-
-// Set up pdf.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`
+// Polyfill DOMMatrix to prevent ReferenceError
+import 'dommatrix'
 
 export default function ParaphraseText() {
   const [inputText, setInputText] = useState("")
@@ -25,11 +22,22 @@ export default function ParaphraseText() {
   const [fileName, setFileName] = useState<string | null>(null)
   const { toast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const pdfjsLibRef = useRef<typeof import('pdfjs-dist') | null>(null)
 
-  // Word count limit
   const MAX_WORDS = 250
 
-  // Handle text input with word count limit
+  // Load pdfjs-dist client-side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('pdfjs-dist').then((pdfjs) => {
+        pdfjsLibRef.current = pdfjs
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.2.133/pdf.worker.min.js`
+      }).catch((error) => {
+        console.error('Failed to load pdfjs-dist:', error)
+      })
+    }
+  }, [])
+
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value
     const words = text.split(/\s+/).filter(word => word.length > 0)
@@ -39,7 +47,6 @@ export default function ParaphraseText() {
         description: `Input cannot exceed ${MAX_WORDS} words. Please shorten your text.`,
         variant: "destructive",
       })
-      // Keep only the first 250 words
       const truncatedText = words.slice(0, MAX_WORDS).join(" ")
       setInputText(truncatedText)
       setWordCount(MAX_WORDS)
@@ -49,44 +56,40 @@ export default function ParaphraseText() {
     }
   }
 
-  // Handle line-by-line animation when paraphrasedText changes
   useEffect(() => {
     if (!paraphrasedText) {
       setDisplayedLines([])
       return
     }
-
-    // Split paraphrasedText into lines (by newline or sentence-ending punctuation)
     const lines = paraphrasedText
       .split(/\n+|\.\s+/)
       .map(line => line.trim())
       .filter(line => line.length > 0)
-
-    setDisplayedLines([]) // Reset displayed lines
-
-    // Add lines one by one with a delay
+    setDisplayedLines([])
     lines.forEach((line, index) => {
       setTimeout(() => {
         setDisplayedLines(prev => [...prev, line])
-      }, index * 500) // 500ms delay per line
+      }, index * 500)
     })
   }, [paraphrasedText])
 
-  // Handle file upload and text extraction
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
     setFileName(file.name)
     setIsLoading(true)
-    setInputText("") // Clear existing text
+    setInputText("")
     setWordCount(0)
 
     try {
       let extractedText = ""
 
       if (file.type === "application/pdf") {
-        // Handle PDF extraction
+        if (typeof window === 'undefined' || !pdfjsLibRef.current) {
+          throw new Error("PDF processing is not supported on the server or pdfjs-dist is not loaded")
+        }
+        const pdfjsLib = pdfjsLibRef.current
         const arrayBuffer = await file.arrayBuffer()
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
         let fullText = ""
@@ -101,10 +104,11 @@ export default function ParaphraseText() {
         }
         extractedText = fullText
       } else if (
-        file.type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ) {
-        // Handle Word (.docx) extraction
+        if (typeof window === 'undefined') {
+          throw new Error("Word processing is not supported on the server")
+        }
         const arrayBuffer = await file.arrayBuffer()
         const result = await mammoth.extractRawText({ arrayBuffer })
         extractedText = result.value
@@ -112,7 +116,6 @@ export default function ParaphraseText() {
         throw new Error("Unsupported file type. Please upload a PDF or Word (.docx) file.")
       }
 
-      // Truncate to 250 words if necessary
       const words = extractedText.split(/\s+/).filter(word => word.length > 0)
       if (words.length > MAX_WORDS) {
         extractedText = words.slice(0, MAX_WORDS).join(" ")
@@ -143,7 +146,7 @@ export default function ParaphraseText() {
     } finally {
       setIsLoading(false)
       if (fileInputRef.current) {
-        fileInputRef.current.value = "" // Reset file input
+        fileInputRef.current.value = ""
       }
     }
   }
@@ -202,7 +205,7 @@ export default function ParaphraseText() {
           <GradientText>Paraphrase Text</GradientText>
         </h1>
         <p className="text-red-500 text-center">
-        This is currently not very effective if you're simply looking to paraphrase text with targeting 0% AI detection. Use with caution
+          This is currently not very effective if you're simply looking to paraphrase text with targeting 0% AI detection. Use with caution
         </p>
       </div>
 
@@ -347,27 +350,24 @@ export default function ParaphraseText() {
   )
 }
 
-// CSS for fade-in animation
-const styles = `
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in forwards;
-}
-`
-
 // Inject styles into the document
 if (typeof document !== "undefined") {
   const styleSheet = document.createElement("style")
-  styleSheet.textContent = styles
+  styleSheet.textContent = `
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-in forwards;
+    }
+  `
   document.head.appendChild(styleSheet)
 }
