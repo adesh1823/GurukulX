@@ -665,39 +665,25 @@ export function PPTViewer({ isVisible, onClose, onSlideChange }: PPTViewerProps)
 
     if (file.type === "application/pdf") {
       try {
-        const { getDocument, GlobalWorkerOptions } = await import("pdfjs-dist");
-
-        GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        
 
 
         const arrayBuffer = await file.arrayBuffer()
-        const pdfDoc = await getDocument(arrayBuffer).promise
+     
         const newSlides: PPTSlide[] = []
 
-        for (let i = 1; i <= pdfDoc.numPages; i++) {
-          const page = await pdfDoc.getPage(i)
-          const viewport = page.getViewport({ scale: 1.5 })
+        
 
-          const canvas = document.createElement("canvas")
-          const context = canvas.getContext("2d")!
-          canvas.height = viewport.height
-          canvas.width = viewport.width
-
-          await page.render({
-            canvasContext: context,
-            viewport: viewport,
-          }).promise
-
-          const imageUrl = canvas.toDataURL()
+          const imageUrl = ""
 
           newSlides.push({
-            id: `pdf-page-${i}-${Date.now()}`,
-            content: `PDF Page ${i}`,
+            id: `pdf-page-${Date.now()}`,
+            content: `PDF Page`,
             imageUrl,
             createdAt: Date.now(),
             annotations: [],
           })
-        }
+        
 
         setSlides((prev) => [...prev, ...newSlides])
         toast({
