@@ -26,7 +26,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, FileQuestion } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { jsPDF } from "jspdf";
+
 import { GradientText } from "@/components/ui/gradient-text";
 
 // Define available question types
@@ -149,32 +149,32 @@ export default function CreateWorksheet() {
   }
 
   // Generate and download PDF
-  const handleDownloadPDF = () => {
+  const handleDownloadText = () => {
     if (!formData || worksheet.length === 0) return;
-
-    const doc = new jsPDF();
-    doc.setFont("helvetica");
-    doc.setFontSize(16);
-    doc.text(`Worksheet: ${formData.subject} - ${formData.topic}`, 10, 10);
-    doc.setFontSize(12);
-    doc.text(`Grade: ${formData.gradeLevel}, Difficulty: ${formData.difficultyLevel}`, 10, 20);
-    doc.setFontSize(14);
-    doc.text("Questions:", 10, 30);
-
-    let yOffset = 40;
-    worksheet.forEach((line) => {
-      if (yOffset > 280) {
-        doc.addPage();
-        yOffset = 10;
-      }
-      doc.setFontSize(12);
-      doc.text(line, 10, yOffset);
-      yOffset += 10;
-    });
-
-    doc.save("worksheet.pdf");
+  
+    // Create the content for the text file
+    const content = `Worksheet: ${formData.subject} - ${formData.topic}\n` +
+                    `Grade: ${formData.gradeLevel}, Difficulty: ${formData.difficultyLevel}\n` +
+                    `Questions:\n` +
+                    worksheet.map((line, index) => `${index + 1}. ${line}`).join("\n");
+  
+    // Create a Blob with the text content
+    const blob = new Blob([content], { type: "text/plain" });
+  
+    // Create a temporary URL for the Blob
+    const url = window.URL.createObjectURL(blob);
+  
+    // Create a temporary link element for downloading
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "worksheet.txt"; // Download as a .txt file
+    document.body.appendChild(link);
+    link.click();
+  
+    // Clean up
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
-
   return (
     <div className="container mx-auto py-8">
       {/* Header */}
@@ -436,8 +436,8 @@ export default function CreateWorksheet() {
             >
               Copy to Clipboard
             </Button>
-            <Button variant="outline" onClick={handleDownloadPDF}>
-              Download PDF
+            <Button variant="outline" onClick={handleDownloadText}>
+              Download Text
             </Button>
           </div>
         </div>
