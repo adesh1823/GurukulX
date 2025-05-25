@@ -8,11 +8,7 @@ import { Loader2, FileText, ArrowDown, Upload } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GradientText } from "@/components/ui/gradient-text"
-const pdfjsLib = require('pdfjs-dist/build/pdf')
 import mammoth from "mammoth"
-
-// Set up pdf.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`
 
 export default function SummarizePapers() {
   const [paperText, setPaperText] = useState("")
@@ -59,22 +55,7 @@ export default function SummarizePapers() {
     try {
       let extractedText = ""
 
-      if (file.type === "application/pdf") {
-        // Handle PDF extraction
-        const arrayBuffer = await file.arrayBuffer()
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise
-        let fullText = ""
-
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i)
-          const textContent = await page.getTextContent()
-          const pageText = textContent.items
-            .map((item: any) => item.str)
-            .join(" ")
-          fullText += pageText + "\n"
-        }
-        extractedText = fullText
-      } else if (
+      if (
         file.type ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ) {
@@ -83,7 +64,7 @@ export default function SummarizePapers() {
         const result = await mammoth.extractRawText({ arrayBuffer })
         extractedText = result.value
       } else {
-        throw new Error("Unsupported file type. Please upload a PDF or Word (.docx) file.")
+        throw new Error("Unsupported file type. Please upload a Word (.docx) file.")
       }
 
       setPaperText(extractedText)
@@ -165,7 +146,7 @@ export default function SummarizePapers() {
           <GradientText>Summarize Research Papers</GradientText>
         </h1>
         <p className="text-muted-foreground text-center">
-          Upload a PDF/Word file or paste research paper text to get a concise, easy-to-understand summary.
+          Upload a Word file or paste research paper text to get a concise, easy-to-understand summary.
         </p>
       </div>
 
@@ -174,7 +155,7 @@ export default function SummarizePapers() {
           <CardHeader>
             <CardTitle>Research Paper Input</CardTitle>
             <CardDescription>
-              Upload a PDF or Word (.docx) file, or paste the text of the research paper you want to summarize.
+              Upload a Word (.docx) file, or paste the text of the research paper you want to summarize.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -189,7 +170,7 @@ export default function SummarizePapers() {
               </Button>
               <input
                 type="file"
-                accept=".pdf,.docx"
+                accept=".docx"
                 onChange={handleFileUpload}
                 className="hidden"
                 ref={fileInputRef}
@@ -292,7 +273,7 @@ export default function SummarizePapers() {
       </div>
 
       <div className="mt-12 p-6 bg-accent rounded-lg">
-        <h2 className="text-xl font-bold mb-4"> uploading pdf or word files, you can also generate a pdf from the summary using a button in the summary section, Tips for Better Summaries</h2>
+        <h2 className="text-xl font-bold mb-4">Tips for Better Summaries</h2>
         <ul className="space-y-2">
           <li className="flex items-start gap-2">
             <div className="h-5 w-5 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
