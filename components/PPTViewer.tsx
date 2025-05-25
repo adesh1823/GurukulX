@@ -1177,7 +1177,7 @@ export function PPTViewer({ isVisible, onClose, onSlideChange }: PPTViewerProps)
                           <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
                             <div className="flex items-center gap-2">
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                              <span className="text-sm">AI is thinking...</span>
+                              <span className="text-sm text-purple-400">AI is thinking...</span>
                             </div>
                           </div>
                         </motion.div>

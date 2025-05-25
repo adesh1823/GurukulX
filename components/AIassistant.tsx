@@ -349,7 +349,7 @@ export function AIAssistant({ showAiPanel, setShowAiPanel, exportWhiteboardData 
                 <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-500"></div>
-                    <span className="text-sm">AI is thinking...</span>
+                    <span className="text-sm text-purple-400">AI is thinking...</span>
                   </div>
                 </div>
               </motion.div>
