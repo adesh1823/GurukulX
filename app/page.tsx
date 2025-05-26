@@ -4,30 +4,7 @@ import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  BookOpen,
-  Users,
-  FileText,
-  ArrowRight,
-  Sparkles,
-  Code,
-  Brain,
-  Lightbulb,
-  Zap,
-  Star,
-  Github,
-  Linkedin,
-  Mail,
-  Heart,
-  Trophy,
-  Rocket,
-  Award,
-  Globe,
-  Database,
-  Cpu,
-  Eye,
-  Mic,
-} from "lucide-react"
+import { BookOpen, Users, FileText, ArrowRight, Sparkles, Code, Brain, Lightbulb, Zap, Star, Github, Linkedin, Mail, Heart, Trophy, Rocket, Award, Globe, Database, Cpu, Eye, Mic } from 'lucide-react'
 import { Vortex } from "@/components/ui/vortex"
 import { GradientText } from "@/components/ui/gradient-text"
 import { motion } from "framer-motion"
@@ -38,8 +15,12 @@ export default function Home() {
   const [scrollY, setScrollY] = useState(0)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
+    // Set mounted to true after component mounts
+    setIsMounted(true)
+
     const handleScroll = () => {
       setScrollY(window.scrollY)
     }
@@ -63,11 +44,25 @@ export default function Home() {
 
   // Calculate parallax effect based on mouse position
   const calculateParallax = (depth = 20) => {
+    // Only calculate parallax after component is mounted
+    if (!isMounted || typeof window === "undefined") {
+      return { x: 0, y: 0 }
+    }
+
     const centerX = window.innerWidth / 2
     const centerY = window.innerHeight / 2
     const moveX = (mousePosition.x - centerX) / depth
     const moveY = (mousePosition.y - centerY) / depth
     return { x: moveX, y: moveY }
+  }
+
+  // Get transform style with proper fallback
+  const getTransformStyle = (depth: number) => {
+    if (!isMounted) {
+      return { transform: "translate(0px, 0px)" }
+    }
+    const { x, y } = calculateParallax(depth)
+    return { transform: `translate(${x}px, ${y}px)` }
   }
 
   return (
@@ -138,46 +133,55 @@ export default function Home() {
                   Explore Features
                 </Button>
               </Link>
+              <Link href="/documentation">
+                <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                  📚 Teacher Guide
+                </Button>
+              </Link>
             </motion.div>
           </motion.div>
         </Vortex>
 
-        {/* Floating elements */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ delay: 1.2, duration: 1 }}
-          className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 z-0"
-          style={{ x: calculateParallax(30).x, y: calculateParallax(30).y }}
-        >
-          <div className="float-slow">
-            <Lightbulb className="h-16 w-16 text-yellow-300/30" />
-          </div>
-        </motion.div>
+        {/* Floating elements - Only render after mount */}
+        {isMounted && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 1.2, duration: 1 }}
+              className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 z-0"
+              style={getTransformStyle(30)}
+            >
+              <div className="float-slow">
+                <Lightbulb className="h-16 w-16 text-yellow-300/30" />
+              </div>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ delay: 1.4, duration: 1 }}
-          className="absolute bottom-1/4 right-1/4 transform translate-x-1/2 translate-y-1/2 z-0"
-          style={{ x: calculateParallax(20).x, y: calculateParallax(20).y }}
-        >
-          <div className="float">
-            <Brain className="h-20 w-20 text-purple-400/30" />
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 1.4, duration: 1 }}
+              className="absolute bottom-1/4 right-1/4 transform translate-x-1/2 translate-y-1/2 z-0"
+              style={getTransformStyle(20)}
+            >
+              <div className="float">
+                <Brain className="h-20 w-20 text-purple-400/30" />
+              </div>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          transition={{ delay: 1.6, duration: 1 }}
-          className="absolute top-1/3 right-1/3 z-0"
-          style={{ x: calculateParallax(40).x, y: calculateParallax(40).y }}
-        >
-          <div className="float-fast">
-            <Zap className="h-12 w-12 text-blue-300/30" />
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              transition={{ delay: 1.6, duration: 1 }}
+              className="absolute top-1/3 right-1/3 z-0"
+              style={getTransformStyle(40)}
+            >
+              <div className="float-fast">
+                <Zap className="h-12 w-12 text-blue-300/30" />
+              </div>
+            </motion.div>
+          </>
+        )}
       </section>
 
       {/* Features Section */}
@@ -209,16 +213,16 @@ export default function Home() {
             />
             <FeatureCard
               icon={Users}
-              title="Question Paper Generator"
-              description="Question paper generation, custom editing recommendations, and automated paper generation."
-              href="/student-engagement/chatbot"
+              title="Student Engagement"
+              description="AI tutor chatbot, adaptive learning recommendations, and automated study guides."
+              href="/student-engagement"
               delay={0.2}
             />
             <FeatureCard
               icon={FileText}
               title="Document Processing"
               description="Upload PDFs and Word documents for summarization, analysis, and content generation."
-              href="/research-support/summarize"
+              href="/research-support"
               delay={0.3}
             />
             <FeatureCard
@@ -361,32 +365,36 @@ export default function Home() {
       <section className="py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/10 via-purple-900/20 to-blue-900/10 pointer-events-none"></div>
 
-        {/* Floating background elements */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.1 }}
-          transition={{ duration: 2 }}
-          viewport={{ once: true }}
-          className="absolute top-10 left-10 z-0"
-          style={{ x: calculateParallax(50).x, y: calculateParallax(50).y }}
-        >
-          <div className="float-slow">
-            <Rocket className="h-24 w-24 text-purple-400/30" />
-          </div>
-        </motion.div>
+        {/* Floating background elements - Only render after mount */}
+        {isMounted && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.1 }}
+              transition={{ duration: 2 }}
+              viewport={{ once: true }}
+              className="absolute top-10 left-10 z-0"
+              style={getTransformStyle(50)}
+            >
+              <div className="float-slow">
+                <Rocket className="h-24 w-24 text-purple-400/30" />
+              </div>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.1 }}
-          transition={{ duration: 2, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="absolute bottom-10 right-10 z-0"
-          style={{ x: calculateParallax(40).x, y: calculateParallax(40).y }}
-        >
-          <div className="float">
-            <Trophy className="h-20 w-20 text-yellow-400/30" />
-          </div>
-        </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.1 }}
+              transition={{ duration: 2, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="absolute bottom-10 right-10 z-0"
+              style={getTransformStyle(40)}
+            >
+              <div className="float">
+                <Trophy className="h-20 w-20 text-yellow-400/30" />
+              </div>
+            </motion.div>
+          </>
+        )}
 
         <div className="container mx-auto relative z-10">
           <motion.div
@@ -644,18 +652,25 @@ export default function Home() {
                 Join thousands of educators who are already using AI to enhance their teaching and improve student
                 outcomes.
               </p>
-              <Link href="/lesson-planning">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 relative overflow-hidden group"
-                >
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-600/40 to-blue-600/40 group-hover:scale-150 transition-transform duration-500 rounded-md blur-md opacity-0 group-hover:opacity-100"></span>
-                  <span className="relative z-10 flex items-center">
-                    Start Creating{" "}
-                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Button>
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/lesson-planning">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 relative overflow-hidden group"
+                  >
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-600/40 to-blue-600/40 group-hover:scale-150 transition-transform duration-500 rounded-md blur-md opacity-0 group-hover:opacity-100"></span>
+                    <span className="relative z-10 flex items-center">
+                      Start Creating{" "}
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </Button>
+                </Link>
+                <Link href="/documentation">
+                  <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                    📚 Read Teacher Guide
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -664,22 +679,21 @@ export default function Home() {
       <footer className="relative py-12 md:py-16 px-4 border-t border-white/10">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-blue-900/10 pointer-events-none"></div>
 
-        {/* Floating footer elements - Only render on client and desktop */}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 0.2 }}
-          transition={{ duration: 2, type: "tween" }}
-          viewport={{ once: true }}
-          className="absolute top-5 left-5 z-0"
-          style={{
-            transform: `translate(${calculateParallax(60).x}px, ${calculateParallax(60).y}px)`,
-          }}
-        >
-          <div className="float-slow">
-            <Star className="h-8 w-8 text-yellow-400/30" />
-          </div>
-        </motion.div>
+        {/* Floating footer elements - Only render after mount */}
+        {isMounted && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 0.2 }}
+            transition={{ duration: 2, type: "tween" }}
+            viewport={{ once: true }}
+            className="absolute top-5 left-5 z-0"
+            style={getTransformStyle(60)}
+          >
+            <div className="float-slow">
+              <Star className="h-8 w-8 text-yellow-400/30" />
+            </div>
+          </motion.div>
+        )}
 
         <div className="container mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-8 md:mb-12">
@@ -804,8 +818,8 @@ export default function Home() {
               <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/support" className="text-gray-400 hover:text-white transition-colors">
-                Support
+              <Link href="/documentation" className="text-gray-400 hover:text-white transition-colors">
+                Teacher Guide
               </Link>
             </div>
           </motion.div>

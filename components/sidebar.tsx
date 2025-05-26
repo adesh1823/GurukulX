@@ -23,6 +23,7 @@ import {
   DollarSign,
   Lock,
   Network,
+  Book,
 } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 
@@ -52,6 +53,12 @@ export function Sidebar() {
               title="SmileRate"
               isActive={pathname === "/pricing"}
               isChild
+            />
+            <NavItem
+              href="/documentation"
+              icon={Book}
+              title="Documentation"
+              isActive={pathname === "/documentation"}
             />
             <NavItem
               href="/lesson-planning"
