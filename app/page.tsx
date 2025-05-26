@@ -90,7 +90,7 @@ export default function Home() {
             >
               <h1 className="text-4xl md:text-7xl font-bold mb-6">
                 <GradientText colors={["#FFFFFF", "#FF6EC7", "#6C5CE7", "#3A86FF", "#FFFFFF"]} animationSpeed={3}>
-                  TeachAI
+                  GurukulX
                 </GradientText>
               </h1>
             </motion.div>
@@ -302,7 +302,7 @@ export default function Home() {
               <GradientText>Powered by Advanced AI</GradientText>
             </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              TeachAI leverages cutting-edge AI models to provide the best educational assistance
+              GurukulX leverages cutting-edge AI models to provide the best educational assistance
             </p>
           </motion.div>
 
