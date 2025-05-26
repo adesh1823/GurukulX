@@ -112,6 +112,13 @@ export function Sidebar() {
                 isActive={pathname === "/research-support/flowchart"}
                 isChild
               />
+              <NavItem
+                href="/research-support/mindmap"
+                icon={Network}
+                title="Mindmap"
+                isActive={pathname === "/research-support/mindmap"}
+                isChild
+              />
             </NavItem>
 
             <NavItem
