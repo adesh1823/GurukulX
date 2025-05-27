@@ -185,10 +185,10 @@ function GettingStartedSection() {
     <div className="space-y-8">
       <div>
         <h2 className="text-3xl font-bold mb-4">
-          <GradientText>Getting Started with TeachAI</GradientText>
+          <GradientText>Getting Started with GurukulX</GradientText>
         </h2>
         <p className="text-gray-300 text-lg">
-          Welcome to TeachAI! This comprehensive guide will help you get started with our AI-powered teaching platform
+          Welcome to GurukulX! This comprehensive guide will help you get started with our AI-powered teaching platform
           designed specifically for Indian college educators.
         </p>
       </div>
@@ -297,7 +297,7 @@ function GettingStartedSection() {
             <div>
               <h4 className="text-lg font-semibold text-white mb-2">Pro Tip for Indian Educators</h4>
               <p className="text-gray-300 text-sm">
-                TeachAI is specifically designed for the Indian education system. You can reference AICTE guidelines,
+                GurukulX is specifically designed for the Indian education system. You can reference AICTE guidelines,
                 NEP 2020 recommendations, and Indian case studies in your prompts for more relevant content.
               </p>
             </div>
@@ -753,7 +753,7 @@ function BestPracticesSection() {
           <GradientText>Best Practices</GradientText>
         </h2>
         <p className="text-gray-300 text-lg">
-          Tips and strategies to maximize the effectiveness of TeachAI in your classroom.
+          Tips and strategies to maximize the effectiveness of GurukulX in your classroom.
         </p>
       </div>
 
@@ -847,7 +847,7 @@ function BestPracticesSection() {
             <div>
               <h4 className="text-lg font-semibold text-white mb-2">Success Story</h4>
               <p className="text-gray-300 text-sm">
-                "Using TeachAI, I've reduced my lesson planning time by 60% while improving student engagement. The
+                "Using GurukulX, I've reduced my lesson planning time by 60% while improving student engagement. The
                 AI-generated examples are particularly helpful for explaining complex algorithms to my computer science
                 students." - Prof. Sharma, IIT Delhi
               </p>
@@ -867,7 +867,7 @@ function TroubleshootingSection() {
           <GradientText>Troubleshooting</GradientText>
         </h2>
         <p className="text-gray-300 text-lg">
-          Common issues and their solutions to help you get the most out of TeachAI.
+          Common issues and their solutions to help you get the most out of GurukulX.
         </p>
       </div>
 
@@ -979,7 +979,7 @@ function TroubleshootingSection() {
             <div>
               <h4 className="text-lg font-semibold text-white mb-2">We're Here to Help!</h4>
               <p className="text-gray-300 text-sm">
-                TeachAI is built by educators, for educators. If you're facing any issues or have suggestions for
+                GurukulX is built by educators, for educators. If you're facing any issues or have suggestions for
                 improvement, don't hesitate to reach out. Your feedback helps us make the platform better for all
                 teachers.
               </p>
