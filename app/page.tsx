@@ -1,10 +1,9 @@
 "use client"
-
 import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Users, FileText, ArrowRight, Sparkles, Code, Brain, Lightbulb, Zap, Star, Github, Linkedin, Mail, Heart, Trophy, Rocket, Award, Globe, Database, Cpu, Eye, Mic } from 'lucide-react'
+import { BookOpen, Users, FileText, ArrowRight, Sparkles, Code, Brain, Lightbulb, Zap, Star, Github, Linkedin, Mail, Heart, Trophy, Rocket, Award, Globe, Database, Cpu, Eye, Mic, Atom } from 'lucide-react'
 import { Vortex } from "@/components/ui/vortex"
 import { GradientText } from "@/components/ui/gradient-text"
 import { motion } from "framer-motion"
@@ -185,52 +184,88 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/10 pointer-events-none"></div>
+      <section id="features" className="py-32 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-purple-900/10 to-slate-900/50"></div>
+
+        {/* Animated Background Grid */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="grid-pattern"></div>
+        </div>
+
         <div className="container mx-auto relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <GradientText>Key Features</GradientText>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Powered by advanced AI models including Llama 3.3 and Qwen 2.5 Coder
-            </p>
+            <motion.h2
+              className="text-5xl md:text-5xl font-bold mb-6"
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }}
+            >
+              <GradientText colors={["#FF6EC7", "#6C5CE7", "#3A86FF"]}>Revolutionary Features</GradientText>
+            </motion.h2>
+            <motion.p
+              className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 1 }}
+              viewport={{ once: true }}
+            >
+              Powered by cutting-edge AI models including{" "}
+              <span className="text-purple-400 font-semibold">Llama 3.3</span> and{" "}
+              <span className="text-blue-400 font-semibold">Qwen 2.5 Coder</span>
+            </motion.p>
           </motion.div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            <FeatureCard
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            <EnhancedFeatureCard
               icon={BookOpen}
-              title="Lesson Planning"
-              description="AI-generated lesson plans, slide decks, and worksheets with modern templates."
+              title="Smart Lesson Planning"
+              description="AI-generated lesson plans with interactive slides, worksheets, and modern templates that adapt to your teaching style."
               href="/lesson-planning"
               delay={0.1}
+              gradient="from-purple-500 to-pink-500"
             />
-            <FeatureCard
-              icon={Users}
-              title="Student Engagement"
-              description="AI tutor chatbot, adaptive learning recommendations, and automated study guides."
-              href="/student-engagement"
-              delay={0.2}
-            />
-            <FeatureCard
+            <EnhancedFeatureCard
               icon={FileText}
-              title="Document Processing"
-              description="Upload PDFs and Word documents for summarization, analysis, and content generation."
+              title="Document Intelligence"
+              description="Upload PDFs and documents for instant summarization, analysis, and intelligent content generation."
               href="/research-support"
-              delay={0.3}
+              delay={0.2}
+              gradient="from-blue-500 to-cyan-500"
             />
-            <FeatureCard
+            <EnhancedFeatureCard
               icon={Code}
-              title="Coding Assistant"
-              description="Advanced coding help powered by Qwen 2.5 Coder for programming courses."
+              title="Advanced Coding Assistant"
+              description="Powered by Qwen 2.5 Coder for comprehensive programming education and code review."
               href="/ai-assistants/coding"
+              delay={0.3}
+              gradient="from-green-500 to-emerald-500"
+            />
+            <EnhancedFeatureCard
+              icon={Atom}
+              title="Dynamic Flowcharts"
+              description="Generate interactive flowcharts and diagrams that bring complex concepts to life."
+              href="/research-support/flowchart"
               delay={0.4}
+              gradient="from-orange-500 to-red-500"
+            />
+            <EnhancedFeatureCard
+              icon={Brain}
+              title="Research Assistant"
+              description="Advanced AI-powered research tools for content summarization and academic support."
+              href="/research-support/summarize"
+              delay={0.5}
+              gradient="from-indigo-500 to-purple-500"
             />
           </div>
         </div>
@@ -837,46 +872,80 @@ export default function Home() {
     </div>
   )
 }
-
-interface FeatureCardProps {
+interface EnhancedFeatureCardProps {
   icon: React.ElementType
   title: string
   description: string
   href: string
   delay?: number
+  gradient: string
 }
 
-function FeatureCard({ icon: Icon, title, description, href, delay = 0 }: FeatureCardProps) {
+function EnhancedFeatureCard({ icon: Icon, title, description, href, delay = 0, gradient }: EnhancedFeatureCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay }}
       viewport={{ once: true }}
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -10, scale: 1.02 }}
+      className="group"
     >
-      <Card className="card-hover h-full relative group">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-blue-600/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <CardHeader className="relative">
-          <div className="feature-icon mb-4 group-hover:scale-110 transition-transform duration-300">
-            <Icon className="h-6 w-6" />
-          </div>
-          <CardTitle className="text-xl group-hover:text-white transition-colors duration-300">{title}</CardTitle>
-          <CardDescription className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+      <Card className="h-full relative overflow-hidden border-white/10 bg-gradient-to-br from-slate-900/50 to-slate-800/50 backdrop-blur-sm">
+        {/* Animated background gradient */}
+        <motion.div
+          className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
+          initial={{ scale: 0.8, opacity: 0 }}
+          whileHover={{ scale: 1.1, opacity: 0.1 }}
+          transition={{ duration: 0.5 }}
+        />
+
+        {/* Glowing border effect */}
+        <motion.div
+          className={`absolute inset-0 rounded-lg bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-20 blur-sm`}
+          initial={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3 }}
+        />
+
+        <CardHeader className="relative z-10 pb-4">
+          <motion.div
+            className={`w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+            whileHover={{ rotate: [0, -10, 10, 0] }}
+            transition={{ duration: 0.5 }}
+          >
+            <Icon className="h-7 w-7 text-white" />
+          </motion.div>
+          <CardTitle className="text-xl font-bold group-hover:text-white transition-colors duration-300 mb-3">
+            {title}
+          </CardTitle>
+          <CardDescription className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">
             {description}
           </CardDescription>
         </CardHeader>
-        <CardFooter className="relative">
+
+        <CardFooter className="relative z-10 pt-0">
           <Link href={href} className="w-full">
-            <Button
-              variant="outline"
-              className="w-full border-white/20 text-white hover:bg-white/10 group-hover:border-white/30 transition-all duration-300"
-            >
-              <span className="flex items-center">
-                Explore
-                <ArrowRight className="ml-2 h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
-              </span>
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                variant="outline"
+                className="w-full border-white/20 text-white hover:bg-white/10 group-hover:border-white/40 transition-all duration-300 relative overflow-hidden"
+              >
+                <motion.span
+                  className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                />
+                <span className="relative flex items-center justify-center">
+                  Explore
+                  <motion.div
+                    initial={{ x: 0, opacity: 0 }}
+                    whileHover={{ x: 5, opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </motion.div>
+                </span>
+              </Button>
+            </motion.div>
           </Link>
         </CardFooter>
       </Card>

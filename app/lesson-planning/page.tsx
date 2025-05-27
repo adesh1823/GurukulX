@@ -48,29 +48,31 @@ export default function LessonPlanningPage() {
             </Link>
           </CardFooter>
         </Card>
-
+        
         <Card className="card-hover">
           <CardHeader>
             <div className="feature-icon">
-              <Presentation className="h-6 w-6" />
+              <FileQuestion className="h-6 w-6" />
             </div>
-            <CardTitle>Whiteboard</CardTitle>
-            <CardDescription>Create interactive whiteboard content for presentations based on your topic outline.</CardDescription>
+            <CardTitle>Create Flowcharts</CardTitle>
+            <CardDescription>
+              Generate flowcharts and diagrams with various question types and difficulty levels.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Get AI-generated whiteboard content with titles, main points, and visual suggestions ready for your
-              presentations.
+              Create flowcharts and diagrams with adjustable difficulty for student assessment.Get edior acess to the flowchart according to your needs.
             </p>
           </CardContent>
           <CardFooter>
-            <Link href="/lesson-planning/whiteboard" className="w-full">
-              <Button className="w-full">Whiteboard</Button>
+            <Link href="/research-support/flowchart" className="w-full">
+              <Button className="w-full">Create flowcharts</Button>
             </Link>
           </CardFooter>
         </Card>
 
-        <Card className="card-hover lg:col-span-2">
+
+        <Card className="card-hover">
           <CardHeader>
             <div className="feature-icon">
               <FileQuestion className="h-6 w-6" />
@@ -88,6 +90,47 @@ export default function LessonPlanningPage() {
           <CardFooter>
             <Link href="/lesson-planning/worksheets" className="w-full">
               <Button className="w-full">Create Worksheet</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <FileQuestion className="h-6 w-6" />
+            </div>
+            <CardTitle>Create Question paper</CardTitle>
+            <CardDescription>
+              Generate Questions with various types and difficulty levels.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Create MCQs, short answers, and diagram-based questions with adjustable difficulty for student assessment.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/student-engagement/chatbot" className="w-full">
+              <Button className="w-full">Create Question paper</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <Presentation className="h-6 w-6" />
+            </div>
+            <CardTitle>Whiteboard</CardTitle>
+            <CardDescription>Create interactive whiteboard content for presentations based on your topic outline.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Get AI-generated whiteboard content with titles, main points, and visual suggestions ready for your
+              presentations.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/lesson-planning/whiteboard" className="w-full">
+              <Button className="w-full">Whiteboard</Button>
             </Link>
           </CardFooter>
         </Card>
