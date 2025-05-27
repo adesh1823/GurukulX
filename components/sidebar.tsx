@@ -69,7 +69,7 @@ export function Sidebar() {
               <NavItem
                 href="/student-engagement/chatbot"
                 icon={MessageSquare}
-                title="Question paper Gen"
+                title="Ques Gen(BETA)"
                 isActive={pathname === "/student-engagement/chatbot"}
                 isChild
               />
@@ -83,7 +83,7 @@ export function Sidebar() {
               <NavItem
                 href="/lesson-planning/whiteboard"
                 icon={Presentation}
-                title="Whiteboard"
+                title="Whiteboard(BETA)"
                 isActive={pathname === "/lesson-planning/whiteboard"}
                 isChild
               />
@@ -119,13 +119,13 @@ export function Sidebar() {
                 isActive={pathname === "/research-support/flowchart"}
                 isChild
               />
-              <NavItem
+              {/* <NavItem
                 href="/research-support/mindmap"
                 icon={Network}
                 title="Mindmap"
                 isActive={pathname === "/research-support/mindmap"}
                 isChild
-              />
+              /> */}
             </NavItem>
 
             <NavItem

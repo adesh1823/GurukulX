@@ -210,18 +210,19 @@ export default function QuestionPaperGenerator() {
 
                 <div className="flex items-center">
                   <Button
+                    disabled
                     variant={thinkingMode ? "default" : "outline"}
                     size="sm"
-                    className={`flex items-center gap-1 ${
+                    className={`flex items-center gap-1 cursor-not-allowed opacity-50 ${
                       thinkingMode
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0"
-                        : "border-gray-700 hover:bg-gray-800"
+                        ? "bg-gradient-to-r from-blue-600 to-purple-600 border-0"
+                        : "border-gray-700"
                     }`}
-                    onClick={() => setThinkingMode(!thinkingMode)}
                   >
                     <Brain className="h-4 w-4" />
-                    {thinkingMode ? "Thinking Mode: On" : "Thinking Mode: Off"}
+                    {thinkingMode ? "Thinking Mode(soon)" : "Thinking Mode(soon)"}
                   </Button>
+
                 </div>
 
                 <Button

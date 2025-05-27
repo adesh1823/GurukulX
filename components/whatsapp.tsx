@@ -797,10 +797,10 @@ const ChatFeatures = () => {
           animation: blob 7s infinite;
         }
         .animation-delay-2000 {
-          animation-delay: 2s;
+          animation-delay: 1s;
         }
         .animation-delay-4000 {
-          animation-delay: 4s;
+          animation-delay: 2s;
         }
       `}</style>
     </div>

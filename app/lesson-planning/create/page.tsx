@@ -1,46 +1,63 @@
-"use client";
-import React, { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, BookOpen, Download, Copy, Sparkles, GraduationCap, Type, Palette, Bold, Italic, Underline, ImageIcon } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
-import { GradientText } from "@/components/ui/gradient-text";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
+"use client"
+import type React from "react"
+import { useState, useRef } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Loader2,
+  BookOpen,
+  Download,
+  Copy,
+  Sparkles,
+  GraduationCap,
+  Type,
+  Palette,
+  Bold,
+  Italic,
+  Underline,
+  ImageIcon,
+  Edit,
+  Eye,
+} from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { motion } from "framer-motion"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import { Separator } from "@/components/ui/separator"
+import { Slider } from "@/components/ui/slider"
+import { GradientText } from "@/components/ui/gradient-text"
 
 const Index = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [lessonPlan, setLessonPlan] = useState<string | null>(null);
-  const [metadata, setMetadata] = useState<any>(null);
-  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false)
+  const [lessonPlan, setLessonPlan] = useState<string | null>(null)
+  const [metadata, setMetadata] = useState<any>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const { toast } = useToast()
 
   // Form state
-  const [subject, setSubject] = useState("");
-  const [topic, setTopic] = useState("");
-  const [gradeLevel, setGradeLevel] = useState("");
-  const [duration, setDuration] = useState("");
-  const [learningObjectives, setLearningObjectives] = useState("");
+  const [subject, setSubject] = useState("")
+  const [topic, setTopic] = useState("")
+  const [gradeLevel, setGradeLevel] = useState("")
+  const [duration, setDuration] = useState("")
+  const [learningObjectives, setLearningObjectives] = useState("")
 
   // Form validation
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   // Styling states for editor
-  const [selectedFont, setSelectedFont] = useState("serif");
-  const [fontSize, setFontSize] = useState([16]);
-  const [textColor, setTextColor] = useState("#000000");
-  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
+  const [selectedFont, setSelectedFont] = useState("serif")
+  const [fontSize, setFontSize] = useState([16])
+  const [textColor, setTextColor] = useState("#000000")
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff")
+  const [isBold, setIsBold] = useState(false)
+  const [isItalic, setIsItalic] = useState(false)
+  const [isUnderline, setIsUnderline] = useState(false)
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const editorRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const fontOptions = [
     { value: "serif", label: "Times New Roman", className: "font-serif" },
@@ -49,50 +66,50 @@ const Index = () => {
     { value: "playfair", label: "Playfair Display", className: "font-playfair" },
     { value: "inter", label: "Inter", className: "font-inter" },
     { value: "roboto", label: "Roboto", className: "font-roboto" },
-  ];
+  ]
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (!subject || subject.length < 2) {
-      newErrors.subject = "Subject must be at least 2 characters.";
+      newErrors.subject = "Subject must be at least 2 characters."
     }
 
     if (!topic || topic.length < 2) {
-      newErrors.topic = "Topic must be at least 2 characters.";
+      newErrors.topic = "Topic must be at least 2 characters."
     }
 
     if (!gradeLevel) {
-      newErrors.gradeLevel = "Please select a grade level.";
+      newErrors.gradeLevel = "Please select a grade level."
     }
 
     if (!duration) {
-      newErrors.duration = "Please select a duration.";
+      newErrors.duration = "Please select a duration."
     }
 
     if (!learningObjectives || learningObjectives.length < 10) {
-      newErrors.learningObjectives = "Learning objectives must be at least 10 characters.";
+      newErrors.learningObjectives = "Learning objectives must be at least 10 characters."
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!validateForm()) {
       toast({
         title: "Form Error",
         description: "Please fix the errors in the form.",
         variant: "destructive",
-      });
-      return;
+      })
+      return
     }
 
-    setIsLoading(true);
-    setLessonPlan(null);
-    setMetadata(null);
+    setIsLoading(true)
+    setLessonPlan(null)
+    setMetadata(null)
 
     try {
       const response = await fetch("/api/lesson-plan", {
@@ -107,140 +124,136 @@ const Index = () => {
           duration,
           learningObjectives,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to generate lesson plan");
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to generate lesson plan")
       }
 
-      const data = await response.json();
-      setLessonPlan(data.lessonPlan);
-      setMetadata(data.metadata);
+      const data = await response.json()
+      setLessonPlan(data.lessonPlan)
+      setMetadata(data.metadata)
 
       toast({
         title: "Lesson Plan Generated",
         description: "Your AI-powered lesson plan has been successfully created for Indian academic context.",
-      });
+      })
     } catch (error) {
-      console.error("Error generating lesson plan:", error);
+      console.error("Error generating lesson plan:", error)
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate lesson plan. Please try again.",
         variant: "destructive",
-      });
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
   const copyToClipboard = () => {
     if (lessonPlan) {
-      navigator.clipboard.writeText(lessonPlan);
+      navigator.clipboard.writeText(lessonPlan)
       toast({
         title: "Copied",
         description: "Lesson plan copied to clipboard",
-      });
+      })
     }
-  };
+  }
 
   const downloadPlan = () => {
     if (lessonPlan && metadata) {
-      const content = `# ${metadata.subject} - ${metadata.topic}\n\nGenerated on: ${new Date(metadata.generatedAt).toLocaleDateString("en-IN")}\nGrade Level: ${metadata.gradeLevel}\nDuration: ${metadata.duration}\n\n${lessonPlan}`;
-      const blob = new Blob([content], { type: "text/markdown" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `lesson-plan-${metadata.topic.toLowerCase().replace(/\s+/g, "-")}.md`;
+      const content = `# ${metadata.subject} - ${metadata.topic}\n\nGenerated on: ${new Date(metadata.generatedAt).toLocaleDateString("en-IN")}\nGrade Level: ${metadata.gradeLevel}\nDuration: ${metadata.duration}\n\n${lessonPlan}`
+      const blob = new Blob([content], { type: "text/markdown" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `lesson-plan-${metadata.topic.toLowerCase().replace(/\s+/g, "-")}.md`
 
       try {
-        document.body.appendChild(a);
-        a.click();
+        document.body.appendChild(a)
+        a.click()
         if (a.parentNode) {
-          a.parentNode.removeChild(a);
+          a.parentNode.removeChild(a)
         }
       } catch (error) {
-        console.error("Error during download:", error);
+        console.error("Error during download:", error)
         toast({
           title: "Download Error",
           description: "Failed to download the lesson plan. Please try again.",
           variant: "destructive",
-        });
+        })
       } finally {
-        URL.revokeObjectURL(url);
+        URL.revokeObjectURL(url)
       }
     }
-  };
+  }
 
   const handleAddImage = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click();
+      fileInputRef.current.click()
     }
-  };
+  }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (event) => {
-        const imageUrl = event.target?.result as string;
-        const imageId = `img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const imageMarkdown = `\n\n<div class="image-container" data-image-id="${imageId}"><img src="${imageUrl}" alt="${file.name}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" /><button class="image-delete-btn" onclick="removeImage('${imageId}')" style="position: absolute; top: 8px; right: 8px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px; display: none;">×</button></div>\n\n`;
-        
-        setLessonPlan((prev) => (prev ? prev + imageMarkdown : imageMarkdown));
+        const imageUrl = event.target?.result as string
+        const imageMarkdown = `\n\n![${file.name}](${imageUrl})\n\n`
+
+        setLessonPlan((prev) => (prev ? prev + imageMarkdown : imageMarkdown))
         toast({
           title: "Image Added",
-          description: "The image has been added to your lesson plan. Hover over the image to remove it.",
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeImage = (imageId: string) => {
-    setLessonPlan((prev) =>
-      prev ? prev.replace(new RegExp(`<div class="image-container" data-image-id="${imageId}"[\\s\\S]*?</div>`), "") : null
-    );
-    toast({
-      title: "Image Removed",
-      description: "The image has been removed from your lesson plan.",
-    });
-  };
-
-  // Add global function for image removal
-  React.useEffect(() => {
-    (window as any).removeImage = removeImage;
-    return () => {
-      delete (window as any).removeImage;
-    };
-  }, []);
-
-  const handleContentChange = () => {
-    if (editorRef.current) {
-      const lines = editorRef.current.innerHTML
-        .split('<br>')
-        .map((line) => {
-          const div = document.createElement("div");
-          div.innerHTML = line;
-          return div.textContent || div.innerText || "";
+          description: "The image has been added to your lesson plan.",
         })
-        .filter((line) => line.trim() !== "");
-      setLessonPlan(lines.join("\n"));
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
-  const applyFormatting = (command: string, value?: string) => {
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-      document.execCommand(command, false, value);
-      handleContentChange();
+  const insertFormatting = (format: string) => {
+    if (!textareaRef.current || !isEditing) return
+
+    const textarea = textareaRef.current
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selectedText = lessonPlan?.substring(start, end) || ""
+
+    let formattedText = ""
+
+    switch (format) {
+      case "bold":
+        formattedText = `**${selectedText}**`
+        break
+      case "italic":
+        formattedText = `*${selectedText}*`
+        break
+      case "underline":
+        formattedText = `<u>${selectedText}</u>`
+        break
+      default:
+        return
     }
-  };
+
+    const newContent = (lessonPlan?.substring(0, start) || "") + formattedText + (lessonPlan?.substring(end) || "")
+
+    setLessonPlan(newContent)
+
+    // Restore cursor position
+    setTimeout(() => {
+      if (textarea) {
+        textarea.focus()
+        textarea.setSelectionRange(start + formattedText.length, start + formattedText.length)
+      }
+    }, 0)
+  }
 
   const getSelectedFontClass = () => {
-    const font = fontOptions.find((f) => f.value === selectedFont);
-    return font ? font.className : "font-serif";
-  };
+    const font = fontOptions.find((f) => f.value === selectedFont)
+    return font ? font.className : "font-serif"
+  }
 
   const getTextStyle = () => ({
     fontSize: `${fontSize[0]}px`,
@@ -249,33 +262,87 @@ const Index = () => {
     fontWeight: isBold ? "bold" : "normal",
     fontStyle: isItalic ? "italic" : "normal",
     textDecoration: isUnderline ? "underline" : "none",
-  });
+  })
+
+  const toggleEditMode = () => {
+    setIsEditing(!isEditing)
+    if (!isEditing) {
+      setTimeout(() => {
+        textareaRef.current?.focus()
+      }, 100)
+    }
+  }
 
   return (
     <div className="min-h-screen p-6 relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <style>{`
-        .editable-content {
-          min-height: 500px;
-          outline: none;
-          transition: all 0.3s ease;
-        }
-        .editable-content:focus {
-          box-shadow: inset 0 2px 15px rgba(59, 130, 246, 0.2);
-        }
-        .image-container {
-          position: relative;
-          display: inline-block;
-          margin: 16px 0;
-        }
-        .image-container:hover .image-delete-btn {
-          display: block !important;
-        }
-        .image-delete-btn:hover {
-          background: rgba(255,0,0,1) !important;
-        }
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-inter { font-family: 'Inter', sans-serif; }
         .font-roboto { font-family: 'Roboto', sans-serif; }
+        
+        .markdown-content h1 {
+          font-size: 2rem;
+          font-weight: bold;
+          background: linear-gradient(to right, #fb923c, #4ade80, #3b82f6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+        }
+        
+        .markdown-content h2 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #4ade80;
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+        }
+        
+        .markdown-content h3 {
+          font-size: 1.25rem;
+          font-weight: 500;
+          color: #60a5fa;
+          margin-top: 1rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .markdown-content p {
+          margin-bottom: 0.75rem;
+          line-height: 1.6;
+          color: #000000;
+        }
+        
+        .markdown-content strong {
+          font-weight: 600;
+          color: #fb923c;
+        }
+        
+        .markdown-content ul {
+          margin-left: 1rem;
+          margin-bottom: 0.75rem;
+        }
+        
+        .markdown-content li {
+          margin-bottom: 0.25rem;
+          color: #000000;
+          position: relative;
+        }
+        
+        .markdown-content li::before {
+          content: "•";
+          color: #4ade80;
+          position: absolute;
+          left: -1rem;
+        }
+        
+        .markdown-content img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          margin: 1rem 0;
+        }
       `}</style>
       <div className="absolute inset-0 bg-gradient-to-b from-orange-900/2 via-green-900/5 to-blue-900/2 pointer-events-none"></div>
       <div className="container mx-auto relative z-10">
@@ -286,9 +353,9 @@ const Index = () => {
           className="mb-8 text-center"
         >
           <div className="flex items-center justify-center mb-4">
-            <GraduationCap className="h-12 w-12 text-gradient-to-r from-purple-500 via-blue-500 to-blue-500 mr-3" />
+            <GraduationCap className="h-12 w-12 text-purple-500 mr-3" />
             <h1 className="text-4xl md:text-5xl font-bold">
-              <GradientText>AI Lesson Planner</GradientText>
+              <GradientText>GX Lesson Planner</GradientText>
             </h1>
           </div>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
@@ -426,12 +493,30 @@ const Index = () => {
           >
             <Card className="bg-gray-800/50 border border-gray-700/50 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center text-white">
-                  <GraduationCap className="h-5 w-5 mr-2 text-green-500" />
-                  Editable Lesson Plan
+                <CardTitle className="flex items-center justify-between text-white">
+                  <div className="flex items-center">
+                    <GraduationCap className="h-5 w-5 mr-2 text-green-500" />
+                    Editable Lesson Plan
+                  </div>
+                  {lessonPlan && (
+                    <Button variant="outline" size="sm" onClick={toggleEditMode} className="flex items-center gap-2">
+                      {isEditing ? (
+                        <>
+                          <Eye className="h-4 w-4" />
+                          Preview
+                        </>
+                      ) : (
+                        <>
+                          <Edit className="h-4 w-4" />
+                          Edit
+                        </>
+                      )}
+                    </Button>
+                  )}
                 </CardTitle>
                 <CardDescription className="text-gray-400">
-                  Your AI-generated lesson plan optimized for Indian academic context. Click to edit content directly or use the toolbar to format.
+                  Your AI-generated lesson plan optimized for Indian academic context. Click Edit to modify content or
+                  use Preview to see formatted output.
                 </CardDescription>
               </CardHeader>
               <CardContent className="min-h-[400px] overflow-auto">
@@ -449,6 +534,7 @@ const Index = () => {
                   </div>
                 ) : lessonPlan ? (
                   <div className="space-y-4">
+                    {/* Toolbar */}
                     <div className="flex flex-wrap items-center gap-4 p-4 bg-gray-800/30 rounded-lg">
                       <div className="flex items-center gap-2">
                         <Type className="h-4 w-4 text-gray-400" />
@@ -486,10 +572,11 @@ const Index = () => {
                           variant={isBold ? "default" : "outline"}
                           size="sm"
                           onClick={() => {
-                            setIsBold(!isBold);
-                            applyFormatting("bold");
+                            setIsBold(!isBold)
+                            insertFormatting("bold")
                           }}
                           className="h-8 w-8 p-0"
+                          disabled={!isEditing}
                         >
                           <Bold className="h-4 w-4" />
                         </Button>
@@ -497,10 +584,11 @@ const Index = () => {
                           variant={isItalic ? "default" : "outline"}
                           size="sm"
                           onClick={() => {
-                            setIsItalic(!isItalic);
-                            applyFormatting("italic");
+                            setIsItalic(!isItalic)
+                            insertFormatting("italic")
                           }}
                           className="h-8 w-8 p-0"
+                          disabled={!isEditing}
                         >
                           <Italic className="h-4 w-4" />
                         </Button>
@@ -508,10 +596,11 @@ const Index = () => {
                           variant={isUnderline ? "default" : "outline"}
                           size="sm"
                           onClick={() => {
-                            setIsUnderline(!isUnderline);
-                            applyFormatting("underline");
+                            setIsUnderline(!isUnderline)
+                            insertFormatting("underline")
                           }}
                           className="h-8 w-8 p-0"
+                          disabled={!isEditing}
                         >
                           <Underline className="h-4 w-4" />
                         </Button>
@@ -524,22 +613,16 @@ const Index = () => {
                         <input
                           type="color"
                           value={textColor}
-                          onChange={(e) => {
-                            setTextColor(e.target.value);
-                            applyFormatting("foreColor", e.target.value);
-                          }}
+                          onChange={(e) => setTextColor(e.target.value)}
                           className="w-8 h-8 rounded border-none cursor-pointer"
                           title="Text Color"
                         />
                         <input
                           type="color"
                           value={backgroundColor}
-                          onChange={(e) => {
-                            setBackgroundColor(e.target.value);
-                            applyFormatting("hiliteColor", e.target.value);
-                          }}
+                          onChange={(e) => setBackgroundColor(e.target.value)}
                           className="w-8 h-8 rounded border-none cursor-pointer"
-                          title="Highlight Color"
+                          title="Background Color"
                         />
                       </div>
 
@@ -550,6 +633,7 @@ const Index = () => {
                         size="sm"
                         className="flex items-center gap-1"
                         onClick={handleAddImage}
+                        disabled={!isEditing}
                       >
                         <ImageIcon className="h-4 w-4" />
                         Add Image
@@ -563,27 +647,22 @@ const Index = () => {
                       />
                     </div>
 
+                    {/* Content Area */}
                     <div
-                      ref={editorRef}
-                      className={`editable-content ${getSelectedFontClass()}`}
-                      contentEditable={true}
-                      suppressContentEditableWarning={true}
-                      onInput={handleContentChange}
+                      className={`${getSelectedFontClass()}`}
                       style={{
                         ...getTextStyle(),
                         minHeight: "500px",
-                        outline: "none",
                         borderRadius: "12px",
                         padding: "2rem",
-                        boxShadow: "inset 0 2px 10px rgba(0, 0, 0, 0.1)",
-                        transition: "all 0.3s ease",
                         backgroundColor: "#ffffff",
+                        boxShadow: "inset 0 2px 10px rgba(0, 0, 0, 0.1)",
                       }}
                     >
                       {metadata && (
                         <div className="mb-6 p-4 bg-gradient-to-r from-orange-500/10 to-green-500/10 rounded-lg border border-orange-500/20">
-                          <h4 className="text-sm font-medium text-orange-400 mb-2">Lesson Plan Details</h4>
-                          <div className="grid grid-cols-2 gap-2 text-xs text-gray-300">
+                          <h4 className="text-sm font-medium text-orange-600 mb-2">Lesson Plan Details</h4>
+                          <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                             <div>Subject: {metadata.subject}</div>
                             <div>Grade: {metadata.gradeLevel}</div>
                             <div>Duration: {metadata.duration}</div>
@@ -591,36 +670,21 @@ const Index = () => {
                           </div>
                         </div>
                       )}
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          h1: ({ children }) => (
-                            <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-green-400 to-blue-500 bg-clip-text text-transparent mt-8 mb-4">
-                              {children}
-                            </h1>
-                          ),
-                          h2: ({ children }) => (
-                            <h2 className="text-xl font-semibold text-green-300 mt-6 mb-3">{children}</h2>
-                          ),
-                          h3: ({ children }) => (
-                            <h3 className="text-lg font-medium text-blue-300 mt-4 mb-2">{children}</h3>
-                          ),
-                          p: ({ children }) => (
-                            <p className="mb-3 text-black leading-relaxed">{children}</p>
-                          ),
-                          strong: ({ children }) => (
-                            <span className="font-semibold text-orange-300">{children}</span>
-                          ),
-                          ul: ({ children }) => <ul className="ml-4 mb-3">{children}</ul>,
-                          li: ({ children }) => (
-                            <li className="mb-1 text-black">
-                              <span className="text-green-400">•</span> {children}
-                            </li>
-                          ),
-                        }}
-                      >
-                        {lessonPlan}
-                      </ReactMarkdown>
+
+                      {isEditing ? (
+                        <Textarea
+                          ref={textareaRef}
+                          value={lessonPlan}
+                          onChange={(e) => setLessonPlan(e.target.value)}
+                          className="w-full min-h-[400px] border-none resize-none focus:ring-0 focus:outline-none bg-transparent text-black"
+                          style={getTextStyle()}
+                          placeholder="Edit your lesson plan here..."
+                        />
+                      ) : (
+                        <div className="markdown-content">
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{lessonPlan}</ReactMarkdown>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -660,7 +724,7 @@ const Index = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Index;
+export default Index

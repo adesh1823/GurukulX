@@ -385,7 +385,7 @@ export default function CodingAssistant() {
                 <div className="flex gap-4">
                   <Button
                     onClick={handleSubmit}
-                    className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white"
+                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -401,12 +401,14 @@ export default function CodingAssistant() {
                     )}
                   </Button>
                   <Button
-                    onClick={() => setThinkingMode(!thinkingMode)}
-                    className={`flex-1 ${thinkingMode ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-600 hover:bg-gray-700"} text-white flex items-center justify-center`}
+                    disabled
+                    title="Coming Soon"
+                    className="flex-1 bg-gray-400 text-white flex items-center justify-center cursor-not-allowed opacity-50"
                   >
                     <Brain className="mr-2 h-4 w-4" />
-                    {thinkingMode ? "Thinking Mode On" : "Thinking Mode Off"}
-                  </Button>
+  Thinking Mode(Coming Soon)
+</Button>
+
                 </div>
 
                 <div>

@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Select model based on thinkingMode
-    const model = thinkingMode ? "qwen-qwq-32b" : "llama-3.3-70b-versatile";
+    const model = thinkingMode ? "llama-3.3-70b-versatile" : "llama-3.3-70b-versatile";
 
     // Call Groq API
     const completion = await groq.chat.completions.create({
