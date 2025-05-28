@@ -3,11 +3,11 @@ import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, FileText, ArrowRight, Sparkles, Code, Brain, Lightbulb, Zap, Star, Github, Linkedin, Mail, Heart, Trophy, Rocket, Award, Globe, Database, Cpu, Eye, Mic, Atom, ChevronRight, GitBranch } from 'lucide-react'
+import { BookOpen, Users, FileText, ArrowRight, Sparkles, Code, Brain, Lightbulb, Zap, Star, Github, Linkedin, Mail, Heart, Trophy, Rocket, Award, Globe, Database, Cpu, Eye, Mic, Atom } from 'lucide-react'
 import { Vortex } from "@/components/ui/vortex"
 import { GradientText } from "@/components/ui/gradient-text"
 import { motion } from "framer-motion"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import ChatFeatures from "@/components/whatsapp"
 
 export default function Home() {
@@ -15,7 +15,6 @@ export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
-  const diagramScrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Set mounted to true after component mounts
@@ -35,29 +34,10 @@ export default function Home() {
     // Set loaded after a small delay to trigger animations
     const timer = setTimeout(() => setIsLoaded(true), 100)
 
-    // Auto-scroll the diagram showcase
-    const scrollInterval = setInterval(() => {
-      if (diagramScrollRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = diagramScrollRef.current
-
-        // If we're at the end, reset to the beginning
-        if (scrollLeft + clientWidth >= scrollWidth - 10) {
-          diagramScrollRef.current.scrollTo({ left: 0, behavior: "smooth" })
-        } else {
-          // Otherwise, scroll a bit more
-          diagramScrollRef.current.scrollTo({
-            left: scrollLeft + 2,
-            behavior: "auto",
-          })
-        }
-      }
-    }, 30)
-
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("mousemove", handleMouseMove)
       clearTimeout(timer)
-      clearInterval(scrollInterval)
     }
   }, [])
 
@@ -86,53 +66,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* News Headline Banner */}
-      <div className="relative bg-gradient-to-r from-purple-900/80 via-blue-900/80 to-purple-900/80 border-b border-white/10 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(120,119,198,0.2),transparent_50%)]"></div>
-        <div className="container mx-auto py-2 px-4">
-          <div className="flex items-center justify-center md:justify-between flex-wrap gap-2">
-            <div className="flex items-center space-x-2">
-              <span className="inline-flex h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-              <span className="text-xs md:text-sm font-medium text-white">New Feature</span>
-            </div>
-            <div className="flex items-center gap-4 overflow-hidden">
-              <div className="flex items-center gap-2 animate-marquee">
-                <span className="text-xs md:text-sm text-white whitespace-nowrap">
-                  <span className="font-semibold">Just Released:</span> AI-Powered Diagram Generators
-                </span>
-                <span className="h-4 w-px bg-white/20"></span>
-                <Link
-                  href="/research-support/sequence-diagram"
-                  className="flex items-center gap-1 text-xs md:text-sm text-blue-300 hover:text-blue-200 whitespace-nowrap"
-                >
-                  <Zap className="h-3 w-3" /> Sequence Diagrams
-                </Link>
-                <span className="h-4 w-px bg-white/20"></span>
-                <Link
-                  href="/research-support/mindmap"
-                  className="flex items-center gap-1 text-xs md:text-sm text-green-300 hover:text-green-200 whitespace-nowrap"
-                >
-                  <Brain className="h-3 w-3" /> Mindmaps
-                </Link>
-                <span className="h-4 w-px bg-white/20"></span>
-                <Link
-                  href="/research-support/flowchart"
-                  className="flex items-center gap-1 text-xs md:text-sm text-orange-300 hover:text-orange-200 whitespace-nowrap"
-                >
-                  <GitBranch className="h-3 w-3" /> Flowcharts
-                </Link>
-              </div>
-            </div>
-            <Link
-              href="/research-support/sequencediagram"
-              className="hidden md:flex items-center text-xs text-white/80 hover:text-white group"
-            >
-              Learn more <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* Hero Section with Vortex Background */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <Vortex
@@ -306,7 +239,7 @@ export default function Home() {
               icon={FileText}
               title="Document Intelligence"
               description="Upload PDFs and documents for instant summarization, analysis, and intelligent content generation."
-              href="/research-support/summarize"
+              href="/research-support"
               delay={0.2}
               gradient="from-blue-500 to-cyan-500"
             />
@@ -803,7 +736,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, type: "tween" }}
+              transition={{ duration: 0.8, type: "tween" }}
               viewport={{ once: true }}
               className="md:col-span-2"
             >
