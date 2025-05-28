@@ -60,7 +60,7 @@ import {
   Diamond,
 } from "lucide-react"
 import { DrawingCanvas } from "@/components/DrawingCanvas"
-import { AIAssistant } from "@/components/AIAssistant"
+import { AIAssistant } from "@/components/AIassistant"
 import { TextRegion } from "@/components/TextRegion"
 import { CollaborationPanel } from "@/components/CollaborationPanel"
 import { WhiteboardToolbar } from "@/components/WhiteboardToolbar"
