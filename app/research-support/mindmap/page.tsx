@@ -5,26 +5,28 @@ import mermaid from "mermaid"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Sparkles, Download, Loader2, Copy, Zap, Info, GitBranch, ArrowRight, Diamond } from "lucide-react"
+import { Sparkles, Download, Loader2, Copy, Zap, Info, Brain, Network, Lightbulb } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import { saveAs } from "file-saver"
 import { GradientText } from "@/components/ui/gradient-text"
 
-const DEFAULT_DIAGRAM = `flowchart TD
-    A["🚀 Start Your Journey"] --> B{"🤔 Choose Your Path"}
-    B -->|💡 Create| C["✨ Build Something Amazing"]
-    B -->|🎯 Learn| D["📚 Explore New Ideas"]
-    C --> E["🎉 Success!"]
-    D --> E
-    E --> F["🔄 Keep Growing"]
-    style A fill:#c7d2fe,stroke:#6366f1,stroke-width:2px
-    style B fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
-    style C fill:#d1fae5,stroke:#10b981,stroke-width:2px
-    style D fill:#d1fae5,stroke:#10b981,stroke-width:2px
-    style E fill:#ddd6fe,stroke:#8b5cf6,stroke-width:2px
-    style F fill:#ddd6fe,stroke:#8b5cf6,stroke-width:2px`
+// Default mindmap diagram
+const DEFAULT_DIAGRAM = `mindmap
+  root((Mindmap Starter))
+    Concepts
+      Idea Generation
+      ::icon(fa fa-lightbulb)
+      Planning
+        ::icon(fa fa-clipboard)
+        Goals
+        Timeline
+    Tools
+      Pen and Paper
+      ::icon(fa fa-pen)
+      Mermaid
+      ::icon(fa fa-code)`
 
-export default function FlowchartGenerator() {
+export default function MindmapGenerator() {
   const [prompt, setPrompt] = useState("")
   const [mermaidCode, setMermaidCode] = useState(DEFAULT_DIAGRAM)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -34,17 +36,31 @@ export default function FlowchartGenerator() {
   const [showDiagram, setShowDiagram] = useState(false)
 
   useEffect(() => {
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: "dark",
-      securityLevel: "loose",
-      fontFamily: "Inter, sans-serif",
-      flowchart: {
-        curve: "basis",
-        useMaxWidth: true,
-      },
-    })
-    renderDiagram(mermaidCode)
+    // Initialize Mermaid for mindmaps
+    ;(async () => {
+      try {
+        await mermaid.registerExternalDiagrams([await import("@mermaid-js/mermaid-mindmap")])
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "dark",
+          securityLevel: "loose",
+          fontFamily: "Inter, sans-serif",
+          mindmap: {
+            useMaxWidth: true,
+            padding: 20,
+          },
+        })
+        renderDiagram(mermaidCode)
+      } catch (err) {
+        console.error("Mermaid initialization error:", err)
+        setError("Failed to initialize Mermaid for mindmaps.")
+        toast({
+          title: "Initialization Error",
+          description: "Failed to load Mermaid mindmap support. Please refresh the page.",
+          variant: "destructive",
+        })
+      }
+    })()
   }, [])
 
   const renderDiagram = async (code: string) => {
@@ -73,16 +89,20 @@ export default function FlowchartGenerator() {
       }, 500)
     } catch (err) {
       console.error("Mermaid rendering error:", err)
-      setError(err instanceof Error ? err.message : "Failed to render diagram. Please check the Mermaid code syntax.")
-      setRenderedSvg("")
-      setIsAnimating(false)
-      setShowDiagram(false)
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to render mindmap. Ensure the code starts with "mindmap", uses consistent indentation, and has valid node syntax (e.g., plain text, ID[Label], ID((Label))).',
+      )
       toast({
         title: "Render Error",
         description:
-          "Invalid Mermaid code. Please ensure the syntax is correct (e.g., use 'flowchart', not 'graph', and proper node syntax like ID[Label]).",
+          "Invalid Mermaid mindmap code. Ensure it starts with 'mindmap', uses proper indentation, and valid node syntax (e.g., plain text like 'Origins', ID[Label] for squares, ID((Label)) for circles). Avoid unescaped parentheses or special characters in node labels.",
         variant: "destructive",
       })
+      setRenderedSvg("")
+      setIsAnimating(false)
+      setShowDiagram(false)
     }
   }
 
@@ -90,7 +110,8 @@ export default function FlowchartGenerator() {
     if (!prompt.trim()) {
       toast({
         title: "Empty prompt",
-        description: "Please enter a description of the diagram you want to create",
+        description:
+          "Please enter a description of the mindmap you want to create (e.g., machine learning concepts, project management workflow).",
         variant: "destructive",
       })
       return
@@ -98,7 +119,7 @@ export default function FlowchartGenerator() {
 
     setIsGenerating(true)
     try {
-      const response = await fetch("/api/flowchart", {
+      const response = await fetch("/api/mindmap", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +128,7 @@ export default function FlowchartGenerator() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to generate diagram")
+        throw new Error("Failed to generate mindmap")
       }
 
       const data = await response.json()
@@ -119,14 +140,14 @@ export default function FlowchartGenerator() {
       await renderDiagram(data.diagram)
 
       toast({
-        title: "Diagram generated",
-        description: "Your diagram has been generated successfully using Groq Llama 3.3",
+        title: "Mindmap generated",
+        description: "Your mindmap has been generated successfully using Groq Llama 3.3",
       })
     } catch (error) {
-      console.error("Error generating diagram:", error)
+      console.error("Error generating mindmap:", error)
       toast({
         title: "Generation failed",
-        description: error instanceof Error ? error.message : "Failed to generate diagram. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate mindmap. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -142,15 +163,15 @@ export default function FlowchartGenerator() {
   const exportSvg = () => {
     if (!renderedSvg) {
       toast({
-        title: "No diagram to export",
-        description: "Please generate or create a valid diagram first",
+        title: "No mindmap to export",
+        description: "Please generate or create a valid mindmap first",
         variant: "destructive",
       })
       return
     }
 
     const svgBlob = new Blob([renderedSvg], { type: "image/svg+xml;charset=utf-8" })
-    const filename = `flowchart-${Date.now()}.svg`
+    const filename = `mindmap-${Date.now()}.svg`
     saveAs(svgBlob, filename)
 
     toast({
@@ -163,7 +184,7 @@ export default function FlowchartGenerator() {
     navigator.clipboard.writeText(mermaidCode)
     toast({
       title: "Code copied",
-      description: "Mermaid code copied to clipboard",
+      description: "Mermaid mindmap code copied to clipboard",
     })
   }
 
@@ -177,8 +198,8 @@ export default function FlowchartGenerator() {
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-5xl font-bold text-centre">
-                <GradientText>GX Flowchart Generator</GradientText><span className="text-yellow-500"> (Beta)</span>
+              <h1 className="text-5xl font-bold text-center">
+                <GradientText>GX Mindmap Generator</GradientText><span className="text-yellow-500"> (Beta)</span>
               </h1>
               <p className="text-sm text-slate-400">Powered by GurukulX-1.0</p>
             </div>
@@ -196,7 +217,9 @@ export default function FlowchartGenerator() {
         </div>
       </header>
 
-  
+      {/* Educational Section */}
+   
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -210,7 +233,7 @@ export default function FlowchartGenerator() {
               </h2>
               <div className="space-y-4">
                 <Input
-                  placeholder="Describe your flowchart (e.g., user registration process, software development workflow...)"
+                  placeholder="Describe your mindmap (e.g., machine learning concepts, project management workflow...)"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="bg-slate-800/80 border-slate-600/50 text-slate-200 placeholder-slate-400 focus:border-emerald-400"
@@ -228,7 +251,7 @@ export default function FlowchartGenerator() {
                   ) : (
                     <>
                       <Sparkles className="mr-2 h-4 w-4" />
-                      Generate Flowchart
+                      Generate Mindmap
                     </>
                   )}
                 </Button>
@@ -255,7 +278,7 @@ export default function FlowchartGenerator() {
               <Textarea
                 value={mermaidCode}
                 onChange={(e) => handleCodeChange(e.target.value)}
-                placeholder="Enter your Mermaid code here..."
+                placeholder="Enter your Mermaid mindmap code here..."
                 className="min-h-[400px] font-mono text-sm bg-slate-800/80 border-slate-600/50 text-slate-200 placeholder-slate-400 focus:border-indigo-400"
               />
             </div>
@@ -265,7 +288,7 @@ export default function FlowchartGenerator() {
           <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl">
             <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
               <span className="w-2 h-2 bg-purple-400 rounded-full mr-3 animate-pulse"></span>
-              Flowchart Preview
+              Mindmap Preview
             </h2>
             <div className="bg-slate-950/90 border border-slate-700/50 rounded-lg p-6 min-h-[600px] flex items-center justify-center relative overflow-hidden">
               {/* Futuristic Loading Animation */}
@@ -308,7 +331,7 @@ export default function FlowchartGenerator() {
 
                   {/* Loading text */}
                   <div className="absolute bottom-20 text-center">
-                    <div className="text-cyan-400 font-mono text-sm mb-2 animate-pulse">Rendering Flowchart...</div>
+                    <div className="text-cyan-400 font-mono text-sm mb-2 animate-pulse">Rendering Mindmap...</div>
                     <div className="flex space-x-1 justify-center">
                       {[...Array(3)].map((_, i) => (
                         <div
@@ -342,8 +365,8 @@ export default function FlowchartGenerator() {
               {/* Empty State */}
               {!renderedSvg && !error && !isAnimating && (
                 <div className="text-slate-400 text-center animate-fadeIn">
-                  <div className="text-4xl mb-4 animate-bounce">📊</div>
-                  <p>Your flowchart will appear here</p>
+                  <div className="text-4xl mb-4 animate-bounce">🧠</div>
+                  <p>Your mindmap will appear here</p>
                   <div className="mt-4 text-xs text-slate-500">Generate or edit code to see the magic happen</div>
                 </div>
               )}
@@ -353,59 +376,59 @@ export default function FlowchartGenerator() {
         <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl mb-6">
           <div className="flex items-center mb-4">
             <Info className="h-6 w-6 text-blue-400 mr-3" />
-            <h2 className="text-xl font-semibold text-white">About Flowcharts</h2>
+            <h2 className="text-xl font-semibold text-white">About Mindmaps</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <p className="text-slate-300 leading-relaxed">
-                Flowcharts are visual representations of processes, workflows, or algorithms. They use standardized
-                symbols to show the sequence of steps, decision points, and flow of control, making complex processes
-                easy to understand and communicate.
+                Mindmaps are visual thinking tools that help organize information hierarchically around a central
+                concept. They mirror how our brains naturally process information, making them perfect for
+                brainstorming, note-taking, project planning, and knowledge mapping.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <GitBranch className="h-8 w-8 text-emerald-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Process Steps</h3>
-                  <p className="text-sm text-slate-400">Sequential actions or operations</p>
+                  <Brain className="h-8 w-8 text-emerald-400 mb-2" />
+                  <h3 className="font-semibold text-white mb-1">Central Topic</h3>
+                  <p className="text-sm text-slate-400">Main idea at the center</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <Diamond className="h-8 w-8 text-blue-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Decision Points</h3>
-                  <p className="text-sm text-slate-400">Conditional branches and choices</p>
+                  <Network className="h-8 w-8 text-blue-400 mb-2" />
+                  <h3 className="font-semibold text-white mb-1">Branches</h3>
+                  <p className="text-sm text-slate-400">Related subtopics radiating out</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <ArrowRight className="h-8 w-8 text-purple-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Flow Direction</h3>
-                  <p className="text-sm text-slate-400">Sequence and connections</p>
+                  <Lightbulb className="h-8 w-8 text-purple-400 mb-2" />
+                  <h3 className="font-semibold text-white mb-1">Keywords</h3>
+                  <p className="text-sm text-slate-400">Key concepts and ideas</p>
                 </div>
               </div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-              <h3 className="font-semibold text-white mb-3">Common Use Cases:</h3>
+              <h3 className="font-semibold text-white mb-3">Perfect for:</h3>
               <ul className="space-y-2 text-slate-300">
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3"></span>
-                  Business process mapping
+                  Brainstorming sessions
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
-                  Software development workflows
+                  Project planning
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>
-                  Algorithm visualization
+                  Study notes organization
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>
-                  Decision trees
+                  Knowledge mapping
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>
-                  User journey mapping
+                  Decision making
                 </li>
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>
-                  Quality control processes
+                  Creative thinking
                 </li>
               </ul>
             </div>
@@ -416,11 +439,11 @@ export default function FlowchartGenerator() {
         <div className="mt-8 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 text-center shadow-2xl">
           <div className="max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold text-white mb-2">
-              <GradientText>⚡ Ultra-Fast AI-Powered Flowchart Generation</GradientText>
+              <GradientText>⚡ Ultra-Fast AI-Powered Mindmap Generation</GradientText>
             </h3>
             <p className="text-slate-300 mb-4">
-              Create professional flowcharts instantly using GurukulX's model. Simply describe your
-              process, and watch as AI generates beautiful Mermaid diagrams with enhanced styling.
+              Create professional mindmaps instantly using GurukulX's lightning-fast model. Simply describe your
+              concept, and watch as AI generates beautiful Mermaid mindmaps with enhanced styling.
             </p>
             <div className="flex items-center justify-center space-x-6 text-sm">
               <div className="flex items-center text-emerald-400">
@@ -469,25 +492,20 @@ export default function FlowchartGenerator() {
         animation-direction: reverse;
       }
       
-      /* Staggered animation for flowchart elements */
-      .diagram-container svg g[id*="flowchart"] {
-        animation: slideInUp 0.6s ease-out;
+      /* Staggered animation for mindmap elements */
+      .diagram-container svg g[id*="mindmap"] {
+        animation: slideInUp 0.8s ease-out;
       }
       
-      .diagram-container svg g[id*="flowchart"]:nth-child(1) { animation-delay: 0.1s; }
-      .diagram-container svg g[id*="flowchart"]:nth-child(2) { animation-delay: 0.2s; }
-      .diagram-container svg g[id*="flowchart"]:nth-child(3) { animation-delay: 0.3s; }
-      .diagram-container svg g[id*="flowchart"]:nth-child(4) { animation-delay: 0.4s; }
+      .diagram-container svg g[id*="mindmap"]:nth-child(1) { animation-delay: 0.1s; }
+      .diagram-container svg g[id*="mindmap"]:nth-child(2) { animation-delay: 0.2s; }
+      .diagram-container svg g[id*="mindmap"]:nth-child(3) { animation-delay: 0.3s; }
+      .diagram-container svg g[id*="mindmap"]:nth-child(4) { animation-delay: 0.4s; }
       
-      /* Glowing effect for flowchart elements */
-      .diagram-container svg rect,
-      .diagram-container svg polygon,
-      .diagram-container svg circle {
+      /* Glowing effect for mindmap nodes */
+      .diagram-container svg circle,
+      .diagram-container svg rect {
         filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.3));
-      }
-      
-      .diagram-container svg path[stroke] {
-        filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.4));
       }
     `}</style>
     </div>

@@ -5,26 +5,20 @@ import mermaid from "mermaid"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Sparkles, Download, Loader2, Copy, Zap, Info, GitBranch, ArrowRight, Diamond } from "lucide-react"
+import { Sparkles, Download, Loader2, Copy, Zap, Info, Users, MessageSquare, Clock, Activity, ArrowBigDownDash, FileCode2 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import { saveAs } from "file-saver"
 import { GradientText } from "@/components/ui/gradient-text"
 
-const DEFAULT_DIAGRAM = `flowchart TD
-    A["🚀 Start Your Journey"] --> B{"🤔 Choose Your Path"}
-    B -->|💡 Create| C["✨ Build Something Amazing"]
-    B -->|🎯 Learn| D["📚 Explore New Ideas"]
-    C --> E["🎉 Success!"]
-    D --> E
-    E --> F["🔄 Keep Growing"]
-    style A fill:#c7d2fe,stroke:#6366f1,stroke-width:2px
-    style B fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
-    style C fill:#d1fae5,stroke:#10b981,stroke-width:2px
-    style D fill:#d1fae5,stroke:#10b981,stroke-width:2px
-    style E fill:#ddd6fe,stroke:#8b5cf6,stroke-width:2px
-    style F fill:#ddd6fe,stroke:#8b5cf6,stroke-width:2px`
+// Default sequence diagram
+const DEFAULT_DIAGRAM = `sequenceDiagram
+  participant A as Alice
+  participant B as Bob
+  A->>B: Hello Bob, how are you?
+  B-->>A: Great!
+  A-)B: See you later!`
 
-export default function FlowchartGenerator() {
+export default function SequenceDiagramGenerator() {
   const [prompt, setPrompt] = useState("")
   const [mermaidCode, setMermaidCode] = useState(DEFAULT_DIAGRAM)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -34,14 +28,23 @@ export default function FlowchartGenerator() {
   const [showDiagram, setShowDiagram] = useState(false)
 
   useEffect(() => {
+    // Initialize Mermaid for sequence diagrams
     mermaid.initialize({
       startOnLoad: false,
       theme: "dark",
       securityLevel: "loose",
       fontFamily: "Inter, sans-serif",
-      flowchart: {
-        curve: "basis",
+      sequence: {
         useMaxWidth: true,
+        diagramMarginX: 50,
+        diagramMarginY: 10,
+        boxTextMargin: 5,
+        boxMargin: 10,
+        actorMargin: 50,
+        actorFontSize: 14,
+        actorFontFamily: "Inter, sans-serif",
+        messageFontSize: 14,
+        messageFontFamily: "Inter, sans-serif",
       },
     })
     renderDiagram(mermaidCode)
@@ -73,16 +76,16 @@ export default function FlowchartGenerator() {
       }, 500)
     } catch (err) {
       console.error("Mermaid rendering error:", err)
-      setError(err instanceof Error ? err.message : "Failed to render diagram. Please check the Mermaid code syntax.")
-      setRenderedSvg("")
-      setIsAnimating(false)
-      setShowDiagram(false)
+      setError(err instanceof Error ? err.message : "Failed to render sequence diagram.")
       toast({
         title: "Render Error",
         description:
-          "Invalid Mermaid code. Please ensure the syntax is correct (e.g., use 'flowchart', not 'graph', and proper node syntax like ID[Label]).",
+          "Invalid Mermaid sequence diagram code. Ensure it starts with 'sequenceDiagram', defines participants, and uses correct message syntax (e.g., A->>B: Message).",
         variant: "destructive",
       })
+      setRenderedSvg("")
+      setIsAnimating(false)
+      setShowDiagram(false)
     }
   }
 
@@ -90,7 +93,8 @@ export default function FlowchartGenerator() {
     if (!prompt.trim()) {
       toast({
         title: "Empty prompt",
-        description: "Please enter a description of the diagram you want to create",
+        description:
+          "Please enter a description of the sequence diagram you want to create (e.g., user authentication flow, API interaction).",
         variant: "destructive",
       })
       return
@@ -98,7 +102,7 @@ export default function FlowchartGenerator() {
 
     setIsGenerating(true)
     try {
-      const response = await fetch("/api/flowchart", {
+      const response = await fetch("/api/sequencediagram", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +111,7 @@ export default function FlowchartGenerator() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to generate diagram")
+        throw new Error("Failed to generate sequence diagram")
       }
 
       const data = await response.json()
@@ -119,14 +123,14 @@ export default function FlowchartGenerator() {
       await renderDiagram(data.diagram)
 
       toast({
-        title: "Diagram generated",
-        description: "Your diagram has been generated successfully using Groq Llama 3.3",
+        title: "Sequence diagram generated",
+        description: "Your sequence diagram has been generated successfully using Groq Llama 3.3",
       })
     } catch (error) {
-      console.error("Error generating diagram:", error)
+      console.error("Error generating sequence diagram:", error)
       toast({
         title: "Generation failed",
-        description: error instanceof Error ? error.message : "Failed to generate diagram. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate sequence diagram. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -142,15 +146,15 @@ export default function FlowchartGenerator() {
   const exportSvg = () => {
     if (!renderedSvg) {
       toast({
-        title: "No diagram to export",
-        description: "Please generate or create a valid diagram first",
+        title: "No sequence diagram to export",
+        description: "Please generate or create a valid sequence diagram first",
         variant: "destructive",
       })
       return
     }
 
     const svgBlob = new Blob([renderedSvg], { type: "image/svg+xml;charset=utf-8" })
-    const filename = `flowchart-${Date.now()}.svg`
+    const filename = `sequence-diagram-${Date.now()}.svg`
     saveAs(svgBlob, filename)
 
     toast({
@@ -163,7 +167,7 @@ export default function FlowchartGenerator() {
     navigator.clipboard.writeText(mermaidCode)
     toast({
       title: "Code copied",
-      description: "Mermaid code copied to clipboard",
+      description: "Mermaid sequence diagram code copied to clipboard",
     })
   }
 
@@ -177,8 +181,8 @@ export default function FlowchartGenerator() {
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-5xl font-bold text-centre">
-                <GradientText>GX Flowchart Generator</GradientText><span className="text-yellow-500"> (Beta)</span>
+              <h1 className="text-5xl font-bold text-center">
+                <GradientText>GX Sequence Diagram Generator</GradientText><span className="text-yellow-500"> (Beta)</span>
               </h1>
               <p className="text-sm text-slate-400">Powered by GurukulX-1.0</p>
             </div>
@@ -196,7 +200,6 @@ export default function FlowchartGenerator() {
         </div>
       </header>
 
-  
       {/* Main Content */}
       <main className="max-w-7xl mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -210,7 +213,7 @@ export default function FlowchartGenerator() {
               </h2>
               <div className="space-y-4">
                 <Input
-                  placeholder="Describe your flowchart (e.g., user registration process, software development workflow...)"
+                  placeholder="Describe your sequence diagram (e.g., user authentication flow, API interaction...)"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="bg-slate-800/80 border-slate-600/50 text-slate-200 placeholder-slate-400 focus:border-emerald-400"
@@ -228,7 +231,7 @@ export default function FlowchartGenerator() {
                   ) : (
                     <>
                       <Sparkles className="mr-2 h-4 w-4" />
-                      Generate Flowchart
+                      Generate Sequence Diagram
                     </>
                   )}
                 </Button>
@@ -240,7 +243,7 @@ export default function FlowchartGenerator() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-white flex items-center">
                   <span className="w-2 h-2 bg-indigo-400 rounded-full mr-3 animate-pulse"></span>
-                  Mermaid Code
+                  Mermaid Sequence Diagram Code
                 </h2>
                 <Button
                   onClick={copyCode}
@@ -255,7 +258,7 @@ export default function FlowchartGenerator() {
               <Textarea
                 value={mermaidCode}
                 onChange={(e) => handleCodeChange(e.target.value)}
-                placeholder="Enter your Mermaid code here..."
+                placeholder="Enter your Mermaid sequence diagram code here..."
                 className="min-h-[400px] font-mono text-sm bg-slate-800/80 border-slate-600/50 text-slate-200 placeholder-slate-400 focus:border-indigo-400"
               />
             </div>
@@ -265,7 +268,7 @@ export default function FlowchartGenerator() {
           <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl">
             <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
               <span className="w-2 h-2 bg-purple-400 rounded-full mr-3 animate-pulse"></span>
-              Flowchart Preview
+              Sequence Diagram Preview
             </h2>
             <div className="bg-slate-950/90 border border-slate-700/50 rounded-lg p-6 min-h-[600px] flex items-center justify-center relative overflow-hidden">
               {/* Futuristic Loading Animation */}
@@ -308,7 +311,9 @@ export default function FlowchartGenerator() {
 
                   {/* Loading text */}
                   <div className="absolute bottom-20 text-center">
-                    <div className="text-cyan-400 font-mono text-sm mb-2 animate-pulse">Rendering Flowchart...</div>
+                    <div className="text-cyan-400 font-mono text-sm mb-2 animate-pulse">
+                      Rendering Sequence Diagram...
+                    </div>
                     <div className="flex space-x-1 justify-center">
                       {[...Array(3)].map((_, i) => (
                         <div
@@ -343,71 +348,81 @@ export default function FlowchartGenerator() {
               {!renderedSvg && !error && !isAnimating && (
                 <div className="text-slate-400 text-center animate-fadeIn">
                   <div className="text-4xl mb-4 animate-bounce">📊</div>
-                  <p>Your flowchart will appear here</p>
+                  <p>Your sequence diagram will appear here</p>
                   <div className="mt-4 text-xs text-slate-500">Generate or edit code to see the magic happen</div>
                 </div>
               )}
             </div>
           </div>
         </div>
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl mb-6">
+        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl mb-6 pt-2">
           <div className="flex items-center mb-4">
             <Info className="h-6 w-6 text-blue-400 mr-3" />
-            <h2 className="text-xl font-semibold text-white">About Flowcharts</h2>
+            <h2 className="text-xl font-semibold text-white">About Sequence Diagrams</h2>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-4">
               <p className="text-slate-300 leading-relaxed">
-                Flowcharts are visual representations of processes, workflows, or algorithms. They use standardized
-                symbols to show the sequence of steps, decision points, and flow of control, making complex processes
-                easy to understand and communicate.
+                Sequence diagrams are powerful visual tools that illustrate how different entities (participants)
+                interact with each other over time. They show the order of messages exchanged between participants,
+                making them perfect for documenting APIs, user flows, and system interactions.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <GitBranch className="h-8 w-8 text-emerald-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Process Steps</h3>
-                  <p className="text-sm text-slate-400">Sequential actions or operations</p>
+                  <Users className="h-8 w-8 text-emerald-400 mb-2" />
+                  <h3 className="font-semibold text-white mb-1">Participants</h3>
+                  <p className="text-sm text-slate-400">Actors, systems, or objects that interact</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <Diamond className="h-8 w-8 text-blue-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Decision Points</h3>
-                  <p className="text-sm text-slate-400">Conditional branches and choices</p>
+                  <MessageSquare className="h-8 w-8 text-blue-400 mb-2" />
+                  <h3 className="font-semibold text-white mb-1">Messages</h3>
+                  <p className="text-sm text-slate-400">Communications between participants</p>
                 </div>
                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <ArrowRight className="h-8 w-8 text-purple-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Flow Direction</h3>
-                  <p className="text-sm text-slate-400">Sequence and connections</p>
+                  <Clock className="h-8 w-8 text-purple-400 mb-2" />
+                  <h3 className="font-semibold text-white mb-1">Timeline</h3>
+                  <p className="text-sm text-slate-400">Chronological order of interactions</p>
                 </div>
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
+                <Activity className="h-8 w-8 text-orange-400 mb-2" />
+                <h3 className="font-semibold text-white mb-1">Activations</h3>
+                <p className="text-sm text-slate-400">Periods when participants are actively performing actions</p>
+                </div>
+
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
+                <ArrowBigDownDash className="h-8 w-8 text-red-400 mb-2" />
+                <h3 className="font-semibold text-white mb-1">Deactivations</h3>
+                <p className="text-sm text-slate-400">Ending points of active participant execution</p>
+                </div>
+
+                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
+                <FileCode2 className="h-8 w-8 text-yellow-400 mb-2" />
+                <h3 className="font-semibold text-white mb-1">Diagram Code</h3>
+                <p className="text-sm text-slate-400">Editable code that defines your sequence diagram</p>
+                </div>
+                
               </div>
             </div>
-            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-              <h3 className="font-semibold text-white mb-3">Common Use Cases:</h3>
-              <ul className="space-y-2 text-slate-300">
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3"></span>
-                  Business process mapping
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
-                  Software development workflows
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>
-                  Algorithm visualization
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>
-                  Decision trees
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>
-                  User journey mapping
-                </li>
-                <li className="flex items-center">
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>
-                  Quality control processes
-                </li>
-              </ul>
+            <div className="space-y-4">
+              <h3 className="font-semibold text-white">Example Diagrams</h3>
+              <div className="space-y-3">
+                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-600/30">
+                  <img
+                    src="/seq2.png"
+                    alt="Simple sequence diagram example with Alice and Bob"
+                    className="w-full rounded border border-slate-600/30 mb-2"
+                  />
+                  <p className="text-xs text-slate-400">Simple two-participant interaction</p>
+                </div>
+                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-600/30">
+                  <img
+                    src="/sequence.png"
+                    alt="Complex sequence diagram with multiple participants"
+                    className="w-full rounded border border-slate-600/30 mb-2"
+                  />
+                  <p className="text-xs text-slate-400">Multi-participant conversation flow</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -416,11 +431,11 @@ export default function FlowchartGenerator() {
         <div className="mt-8 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 text-center shadow-2xl">
           <div className="max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold text-white mb-2">
-              <GradientText>⚡ Ultra-Fast AI-Powered Flowchart Generation</GradientText>
+              <GradientText>⚡ Ultra-Fast AI-Powered Sequence Diagram Generation</GradientText>
             </h3>
             <p className="text-slate-300 mb-4">
-              Create professional flowcharts instantly using GurukulX's model. Simply describe your
-              process, and watch as AI generates beautiful Mermaid diagrams with enhanced styling.
+              Create professional sequence diagrams instantly using GurukulX's lightning-fast model. Simply
+              describe the interaction, and watch as AI generates beautiful Mermaid sequence diagrams.
             </p>
             <div className="flex items-center justify-center space-x-6 text-sm">
               <div className="flex items-center text-emerald-400">
@@ -457,6 +472,28 @@ export default function FlowchartGenerator() {
         }
       }
       
+      @keyframes slideInLeft {
+        from { 
+          opacity: 0; 
+          transform: translateX(-30px); 
+        }
+        to { 
+          opacity: 1; 
+          transform: translateX(0); 
+        }
+      }
+      
+      @keyframes slideInRight {
+        from { 
+          opacity: 0; 
+          transform: translateX(30px); 
+        }
+        to { 
+          opacity: 1; 
+          transform: translateX(0); 
+        }
+      }
+      
       .animate-fadeIn {
         animation: fadeIn 0.8s ease-out;
       }
@@ -465,28 +502,48 @@ export default function FlowchartGenerator() {
         animation: slideInUp 1s ease-out;
       }
       
+      .animate-slideInLeft {
+        animation: slideInLeft 0.8s ease-out;
+      }
+      
+      .animate-slideInRight {
+        animation: slideInRight 0.8s ease-out;
+      }
+      
       .animate-reverse {
         animation-direction: reverse;
       }
       
-      /* Staggered animation for flowchart elements */
-      .diagram-container svg g[id*="flowchart"] {
+      /* Staggered animation for diagram elements */
+      .diagram-container svg .actor {
         animation: slideInUp 0.6s ease-out;
       }
       
-      .diagram-container svg g[id*="flowchart"]:nth-child(1) { animation-delay: 0.1s; }
-      .diagram-container svg g[id*="flowchart"]:nth-child(2) { animation-delay: 0.2s; }
-      .diagram-container svg g[id*="flowchart"]:nth-child(3) { animation-delay: 0.3s; }
-      .diagram-container svg g[id*="flowchart"]:nth-child(4) { animation-delay: 0.4s; }
+      .diagram-container svg .actor:nth-child(1) { animation-delay: 0.1s; }
+      .diagram-container svg .actor:nth-child(2) { animation-delay: 0.2s; }
+      .diagram-container svg .actor:nth-child(3) { animation-delay: 0.3s; }
+      .diagram-container svg .actor:nth-child(4) { animation-delay: 0.4s; }
       
-      /* Glowing effect for flowchart elements */
-      .diagram-container svg rect,
-      .diagram-container svg polygon,
-      .diagram-container svg circle {
-        filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.3));
+      .diagram-container svg .messageLine0,
+      .diagram-container svg .messageLine1 {
+        animation: slideInLeft 0.8s ease-out;
+        animation-delay: 0.5s;
+        animation-fill-mode: both;
       }
       
-      .diagram-container svg path[stroke] {
+      .diagram-container svg .messageText {
+        animation: fadeIn 1s ease-out;
+        animation-delay: 0.7s;
+        animation-fill-mode: both;
+      }
+      
+      /* Glowing effect for active elements */
+      .diagram-container svg .actor rect {
+        filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
+      }
+      
+      .diagram-container svg .messageLine0,
+      .diagram-container svg .messageLine1 {
         filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.4));
       }
     `}</style>

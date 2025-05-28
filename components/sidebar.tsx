@@ -24,6 +24,9 @@ import {
   Lock,
   Network,
   Book,
+  TreeDeciduous,
+  GitBranch,
+  Workflow,
 } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 
@@ -114,18 +117,26 @@ export function Sidebar() {
             
               <NavItem
                 href="/research-support/flowchart"
-                icon={Network}
+                icon={Workflow}
                 title="Flowchart"
                 isActive={pathname === "/research-support/flowchart"}
                 isChild
               />
-              {/* <NavItem
+              <NavItem
                 href="/research-support/mindmap"
-                icon={Network}
+                icon={TreeDeciduous}
                 title="Mindmap"
                 isActive={pathname === "/research-support/mindmap"}
                 isChild
-              /> */}
+              />
+               <NavItem
+                href="/research-support/sequencediagram"
+                icon={GitBranch}
+                title="Sequence Diagram"
+                isActive={pathname === "/research-support/sequencediagram"}
+                isChild
+              />
+
             </NavItem>
 
             <NavItem

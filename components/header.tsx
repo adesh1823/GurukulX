@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { BookOpen, Users, FileText, Bot, Menu, X, Globe, DollarSign ,Network} from "lucide-react"
+import { BookOpen, Users, FileText, Bot, Menu, X, Globe, DollarSign ,Network, Workflow} from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
@@ -20,7 +20,7 @@ export default function Header() {
     { name: "Lesson Planning", href: "/lesson-planning", icon: BookOpen },
     { name: "Research Support", href: "/research-support/summarize", icon: FileText },
     { name: "AI Assistants", href: "/ai-assistants", icon: Bot },
-    { name: "Flowchart Gen", href: "/research-support/flowchart", icon: Network, external: true },
+    { name: "Flowchart Gen", href: "/research-support/flowchart", icon: Workflow, external: true },
     { name: "Developer Portfolio", href: "https://arav-portfolio.vercel.app/", icon: Globe, external: true },
     
   ]
