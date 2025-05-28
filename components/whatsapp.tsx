@@ -679,7 +679,7 @@ const ChatFeatures = () => {
           <motion.div
             ref={ref}
             variants={containerVariants}
-            initial="hidden"
+            // initial="hidden"
             animate={controls}
             className="flex flex-col justify-center"
           >

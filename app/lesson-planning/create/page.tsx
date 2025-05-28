@@ -163,28 +163,112 @@ const Index = () => {
 
   const downloadPlan = () => {
     if (lessonPlan && metadata) {
-      const content = `# ${metadata.subject} - ${metadata.topic}\n\nGenerated on: ${new Date(metadata.generatedAt).toLocaleDateString("en-IN")}\nGrade Level: ${metadata.gradeLevel}\nDuration: ${metadata.duration}\n\n${lessonPlan}`
-      const blob = new Blob([content], { type: "text/markdown" })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `lesson-plan-${metadata.topic.toLowerCase().replace(/\s+/g, "-")}.md`
+      // Create a hidden iframe for PDF generation
+      const iframe = document.createElement("iframe")
+      iframe.style.display = "none"
+      document.body.appendChild(iframe)
 
-      try {
-        document.body.appendChild(a)
-        a.click()
-        if (a.parentNode) {
-          a.parentNode.removeChild(a)
-        }
-      } catch (error) {
-        console.error("Error during download:", error)
+      const doc = iframe.contentWindow?.document
+      if (!doc) {
         toast({
           title: "Download Error",
-          description: "Failed to download the lesson plan. Please try again.",
+          description: "Failed to create PDF. Please try again.",
           variant: "destructive",
         })
-      } finally {
-        URL.revokeObjectURL(url)
+        document.body.removeChild(iframe)
+        return
+      }
+
+      // Prepare content with metadata and lesson plan
+      const content = `
+        <html>
+          <head>
+            <title>Lesson Plan - ${metadata.topic}</title>
+            <style>
+              body {
+                font-family: Times New Roman, serif;
+                margin: 20px;
+                line-height: 1.6;
+                color: #000000;
+              }
+              h1 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #fb923c;
+              }
+              h2 {
+                font-size: 18px;
+                font-weight: 600;
+                color: #4ade80;
+              }
+              h3 {
+                font-size: 16px;
+                font-weight: 500;
+                color: #60a5fa;
+              }
+              p {
+                margin-bottom: 12px;
+              }
+              ul {
+                margin-left: 20px;
+                margin-bottom: 12px;
+              }
+              li {
+                margin-bottom: 4px;
+              }
+              .metadata {
+                margin-bottom: 20px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                background-color: #f9f9f9;
+              }
+              img {
+                max-width: 100%;
+                height: auto;
+                margin: 10px 0;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="metadata">
+              <h1>${metadata.subject} - ${metadata.topic}</h1>
+              <p><strong>Generated on:</strong> ${new Date(metadata.generatedAt).toLocaleDateString("en-IN")}</p>
+              <p><strong>Grade Level:</strong> ${metadata.gradeLevel}</p>
+              <p><strong>Duration:</strong> ${metadata.duration}</p>
+            </div>
+            ${lessonPlan.replace(/\n/g, "<br>").replace(/!\[([^\]]*)\]\(([^\)]*)\)/g, '<img src="$2" alt="$1">')}
+          </body>
+        </html>
+      `
+
+      try {
+        // Write content to iframe
+        doc.open()
+        doc.write(content)
+        doc.close()
+
+        // Wait for content to load, then trigger print
+        setTimeout(() => {
+          iframe.contentWindow?.focus()
+          iframe.contentWindow?.print()
+          // Clean up iframe after print dialog is triggered
+          setTimeout(() => {
+            document.body.removeChild(iframe)
+          }, 1000)
+        }, 500)
+
+        toast({
+          title: "Download Initiated",
+          description: "Please select 'Save as PDF' in the print dialog to download your lesson plan.",
+        })
+      } catch (error) {
+        console.error("Error during PDF generation:", error)
+        toast({
+          title: "Download Error",
+          description: "Failed to generate PDF. Please try again.",
+          variant: "destructive",
+        })
+        document.body.removeChild(iframe)
       }
     }
   }
@@ -715,7 +799,7 @@ const Index = () => {
                   </Button>
                   <Button variant="outline" onClick={downloadPlan}>
                     <Download className="mr-2 h-4 w-4" />
-                    Download
+                    Download PDF
                   </Button>
                 </CardFooter>
               )}
