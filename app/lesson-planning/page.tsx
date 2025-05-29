@@ -70,6 +70,48 @@ export default function LessonPlanningPage() {
             </Link>
           </CardFooter>
         </Card>
+        <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <FileQuestion className="h-6 w-6" />
+            </div>
+            <CardTitle>Create Mindmaps</CardTitle>
+            <CardDescription>
+              Generate mindmaps with just typing your prompt 
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Create mindmaps with adjustable difficulty.Get edior acess to the mindmap according to your needs.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/research-support/mindmap" className="w-full">
+              <Button className="w-full">Create mindmaps</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <FileQuestion className="h-6 w-6" />
+            </div>
+            <CardTitle>Create Sequence Diagram</CardTitle>
+            <CardDescription>
+              Generate Sequence Diagram with just typing your prompt 
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Create Sequence Diagram with adjustable difficulty.Get edior acess to the Sequence Diagram according to your needs.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/research-support/sequencediagram" className="w-full">
+              <Button className="w-full">Create Sequence Diagram</Button>
+            </Link>
+          </CardFooter>
+        </Card>
 
 
         <Card className="card-hover">

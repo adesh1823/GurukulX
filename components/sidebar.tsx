@@ -102,10 +102,10 @@ export function Sidebar() {
     
 
             <NavItem
-              href="/research-support"
+              href="/research-support/sequencediagram"
               icon={FileText}
               title="Research Support"
-              isActive={pathname === "/research-support"}
+              isActive={pathname === "/research-support/sequencediagram"}
             >
               <NavItem
                 href="/research-support/summarize"
