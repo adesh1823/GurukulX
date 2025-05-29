@@ -152,6 +152,13 @@ export function Sidebar() {
                 isActive={pathname === "/ai-assistants/coding"}
                 isChild
               />
+              <NavItem
+                href="/ai-assistants/tts"
+                icon={Mic}
+                title="AI Reader"
+                isActive={pathname === "/ai-assistants/tts"}
+                isChild
+              />
             </NavItem>
             <NavItem
               href=""
