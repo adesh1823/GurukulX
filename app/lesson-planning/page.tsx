@@ -25,13 +25,34 @@ export default function LessonPlanningPage() {
             </p>
           </div>
         </div>
-
         <Card className="card-hover">
           <CardHeader>
             <div className="feature-icon">
               <BookOpen className="h-6 w-6" />
             </div>
-            <CardTitle>Create Lesson Plan</CardTitle>
+            <CardTitle>AI Reader</CardTitle>
+            <CardDescription>
+              किसी भी भारतीय भाषा में टेक्स्ट का ऑडियो जनरेट करें।  
+              (Generate audio from text in any Indian language.)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Our AI generated audio for any text in any Indian language.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/lesson-planning/create" className="w-full">
+              <Button className="w-full">AI Reader</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <BookOpen className="h-6 w-6" />
+            </div>
+            <CardTitle>Lesson Planning</CardTitle>
             <CardDescription>
               Generate comprehensive lesson plans based on your subject, topic, and learning objectives.
             </CardDescription>

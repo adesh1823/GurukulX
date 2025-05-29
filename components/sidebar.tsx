@@ -27,6 +27,7 @@ import {
   TreeDeciduous,
   GitBranch,
   Workflow,
+  Code,
 } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 
@@ -147,7 +148,7 @@ export function Sidebar() {
             >
               <NavItem
                 href="/ai-assistants/coding"
-                icon={Mic}
+                icon={Code}
                 title="Coding Assistant"
                 isActive={pathname === "/ai-assistants/coding"}
                 isChild
