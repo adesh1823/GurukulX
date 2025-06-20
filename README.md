@@ -1,4 +1,4 @@
-
+```mermaid
 architecture-beta
     service dns(logos:aws-route53)[Route 53]
     service cf(logos:aws-cloudfront)[CloudFront]
@@ -21,3 +21,4 @@ architecture-beta
     gateway:R --> L:auth
     gateway:R --> L:blog
     gateway:R --> L:analytics
+```
