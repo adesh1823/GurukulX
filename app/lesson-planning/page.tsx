@@ -30,6 +30,28 @@ export default function LessonPlanningPage() {
             <div className="feature-icon">
               <BookOpen className="h-6 w-6" />
             </div>
+            <CardTitle>Voice Bot</CardTitle>
+            <CardDescription>
+              learn practicing interview questions
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Our AI creates structured interview questions with introductions, main content, activities, assessments, and
+              resources.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Link href="/voicebot" className="w-full">
+              <Button className="w-full">Voice Bot</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card className="card-hover">
+          <CardHeader>
+            <div className="feature-icon">
+              <BookOpen className="h-6 w-6" />
+            </div>
             <CardTitle>AI Reader</CardTitle>
             <CardDescription>
               किसी भी भारतीय भाषा में टेक्स्ट का ऑडियो जनरेट करें।  
