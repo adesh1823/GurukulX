@@ -13,7 +13,7 @@ import {
 import { Track } from "livekit-client"
 import "@livekit/components-styles"
 
-// Message component for chat display with Indian educational theme
+// Message component for chat display with Indian educational theme ok
 const Message: React.FC<{ type: "agent" | "user"; text: string }> = ({ type, text }) => {
   return (
     <div className="flex items-start space-x-3 mb-4">
