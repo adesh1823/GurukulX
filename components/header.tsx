@@ -13,7 +13,7 @@ export default function Header() {
   const pathname = usePathname()
 
   const navItems = [
-    { name: "Voicebot", href: "/voicebot", icon: Users },
+    { name: "Voicebot", href: "/Voicebot", icon: Users },
     { name: "AI Reader", href: "/ai-assistants/tts", icon: BookOpen },
     
     { name: "Mindmap", href: "/research-support/mindmap", icon: Users },

@@ -42,7 +42,7 @@ export default function LessonPlanningPage() {
             </p>
           </CardContent>
           <CardFooter>
-            <Link href="/voicebot" className="w-full">
+            <Link href="/Voicebot" className="w-full">
               <Button className="w-full">Voice Bot</Button>
             </Link>
           </CardFooter>
