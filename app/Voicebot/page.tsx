@@ -204,7 +204,7 @@ const EducationalAssistantPage: React.FC = () => {
           </a>
 
           <LiveKitRoom
-            serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL || "wss://app-zq7e4mya.livekit.cloud"}
+            serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL || "wss://hello-mynqr5n8.livekit.cloud"}
             token={token}
             connect={true}
             video={false}
