@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@elastic/eui": "^102.1.0",
+    "@livekit/components-react": "latest",
+    "@livekit/components-styles": "latest",
+    "@livekit/krisp-noise-filter": "latest",
     "@emotion/is-prop-valid": "latest",
     "@google-cloud/text-to-speech": "^6.1.0",
     "@hookform/resolvers": "latest",
