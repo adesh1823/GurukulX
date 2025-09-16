@@ -10,6 +10,7 @@ import { toast } from "@/components/ui/use-toast"
 import { saveAs } from "file-saver"
 import { GradientText } from "@/components/ui/gradient-text"
 
+// Default flowchart diagram
 const DEFAULT_DIAGRAM = `flowchart TD
     A["🚀 Start Your Journey"] --> B{"🤔 Choose Your Path"}
     B -->|💡 Create| C["✨ Build Something Amazing"]
@@ -36,7 +37,7 @@ export default function FlowchartGenerator() {
   useEffect(() => {
     mermaid.initialize({
       startOnLoad: false,
-      theme: "dark",
+      theme: "default",
       securityLevel: "loose",
       fontFamily: "Inter, sans-serif",
       flowchart: {
@@ -139,7 +140,7 @@ export default function FlowchartGenerator() {
     renderDiagram(newCode)
   }
 
-  const exportSvg = () => {
+  const exportPng = () => {
     if (!renderedSvg) {
       toast({
         title: "No diagram to export",
@@ -149,14 +150,34 @@ export default function FlowchartGenerator() {
       return
     }
 
+    // Create an image element to render the SVG
+    const img = new Image()
     const svgBlob = new Blob([renderedSvg], { type: "image/svg+xml;charset=utf-8" })
-    const filename = `flowchart-${Date.now()}.svg`
-    saveAs(svgBlob, filename)
+    const url = URL.createObjectURL(svgBlob)
 
-    toast({
-      title: "Export successful",
-      description: `Saved as ${filename}`,
-    })
+    img.onload = () => {
+      // Create a canvas to draw the image
+      const canvas = document.createElement("canvas")
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext("2d")
+      ctx?.drawImage(img, 0, 0)
+
+      // Convert canvas to PNG
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const filename = `flowchart-${Date.now()}.png`
+          saveAs(blob, filename)
+          toast({
+            title: "Export successful",
+            description: `Saved as ${filename}`,
+          })
+        }
+        URL.revokeObjectURL(url)
+      }, "image/png")
+    }
+
+    img.src = url
   }
 
   const copyCode = () => {
@@ -168,44 +189,43 @@ export default function FlowchartGenerator() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Header */}
-      <header className="border-b border-slate-700/50 backdrop-blur-xl bg-slate-900/50 p-6">
+      <header className="border-b border-gray-300 backdrop-blur-xl bg-gray-50/80 p-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white flex items-center justify-center font-bold text-lg shadow-lg">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white flex items-center justify-center font-bold text-lg shadow-lg">
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-5xl font-bold text-centre">
-                <GradientText>GX Flowchart Generator</GradientText><span className="text-yellow-500"> (Beta)</span>
+              <h1 className="text-3xl font-bold text-center">
+                <GradientText>GX Flowchart Generator</GradientText><span className="text-blue-500"> (Beta)</span>
               </h1>
-              <p className="text-sm text-slate-400">Powered by GurukulX-1.0</p>
+              <p className="text-sm text-black">Powered by GurukulX-1.0</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Button
-              onClick={exportSvg}
+              onClick={exportPng}
               variant="outline"
-              className="bg-slate-800/80 border-slate-600/50 text-slate-200 hover:bg-slate-700/80"
+              className="bg-gray-50/80 border-gray-300 text-black hover:bg-gray-100"
             >
               <Download className="h-4 w-4 mr-2" />
-              Export SVG
+              Export PNG
             </Button>
           </div>
         </div>
       </header>
 
-  
       {/* Main Content */}
       <main className="max-w-7xl mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Panel - Input */}
           <div className="space-y-6">
             {/* AI Prompt Section */}
-            <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl">
-              <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 animate-pulse"></span>
+            <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-300 rounded-xl p-6 shadow-2xl">
+              <h2 className="text-lg font-semibold text-black mb-4 flex items-center">
+                <span className="w-2 h-2 bg-blue-400 rounded-full mr-3 animate-pulse"></span>
                 AI Prompt
               </h2>
               <div className="space-y-4">
@@ -213,12 +233,12 @@ export default function FlowchartGenerator() {
                   placeholder="Describe your flowchart (e.g., user registration process, software development workflow...)"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="bg-slate-800/80 border-slate-600/50 text-slate-200 placeholder-slate-400 focus:border-emerald-400"
+                  className="bg-gray-50/80 border-gray-300 text-black placeholder-gray-400 focus:border-blue-400"
                 />
                 <Button
                   onClick={generateDiagram}
                   disabled={isGenerating || !prompt.trim()}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-emerald-700 hover:to-teal-700 text-white border-0 shadow-lg"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0 shadow-lg"
                 >
                   {isGenerating ? (
                     <>
@@ -236,17 +256,17 @@ export default function FlowchartGenerator() {
             </div>
 
             {/* Code Editor Section */}
-            <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl">
+            <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-300 rounded-xl p-6 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-white flex items-center">
-                  <span className="w-2 h-2 bg-indigo-400 rounded-full mr-3 animate-pulse"></span>
+                <h2 className="text-lg font-semibold text-black flex items-center">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3 animate-pulse"></span>
                   Mermaid Code
                 </h2>
                 <Button
                   onClick={copyCode}
                   variant="outline"
                   size="sm"
-                  className="bg-slate-800/80 border-slate-600/50 text-slate-200 hover:bg-slate-700/80"
+                  className="bg-gray-50/80 border-gray-300 text-black hover:bg-gray-100"
                 >
                   <Copy className="h-4 w-4 mr-2" />
                   Copy
@@ -256,37 +276,37 @@ export default function FlowchartGenerator() {
                 value={mermaidCode}
                 onChange={(e) => handleCodeChange(e.target.value)}
                 placeholder="Enter your Mermaid code here..."
-                className="min-h-[400px] font-mono text-sm bg-slate-800/80 border-slate-600/50 text-slate-200 placeholder-slate-400 focus:border-indigo-400"
+                className="min-h-[400px] font-mono text-sm bg-gray-50/80 border-gray-300 text-black placeholder-gray-400 focus:border-blue-400"
               />
             </div>
           </div>
 
           {/* Right Panel - Preview */}
-          <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
-              <span className="w-2 h-2 bg-purple-400 rounded-full mr-3 animate-pulse"></span>
+          <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-300 rounded-xl p-6 shadow-2xl">
+            <h2 className="text-lg font-semibold text-black mb-4 flex items-center">
+              <span className="w-2 h-2 bg-blue-400 rounded-full mr-3 animate-pulse"></span>
               Flowchart Preview
             </h2>
-            <div className="bg-slate-950/90 border border-slate-700/50 rounded-lg p-6 min-h-[600px] flex items-center justify-center relative overflow-hidden">
+            <div className="bg-gray-50/90 border border-gray-300 rounded-lg p-6 min-h-[600px] flex items-center justify-center relative overflow-hidden">
               {/* Futuristic Loading Animation */}
               {isAnimating && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <div className="relative">
                     {/* Outer rotating ring */}
-                    <div className="w-32 h-32 border-4 border-transparent border-t-purple-500 border-r-blue-500 rounded-full animate-spin"></div>
+                    <div className="w-32 h-32 border-4 border-transparent border-t-blue-400 border-r-indigo-400 rounded-full animate-spin"></div>
 
                     {/* Inner pulsing circle */}
-                    <div className="absolute inset-4 w-24 h-24 border-2 border-transparent border-t-emerald-400 border-l-cyan-400 rounded-full animate-spin animate-reverse"></div>
+                    <div className="absolute inset-4 w-24 h-24 border-2 border-transparent border-t-blue-400 border-l-indigo-400 rounded-full animate-spin animate-reverse"></div>
 
                     {/* Center glowing dot */}
-                    <div className="absolute inset-1/2 w-4 h-4 -ml-2 -mt-2 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full animate-pulse shadow-lg shadow-purple-500/50"></div>
+                    <div className="absolute inset-1/2 w-4 h-4 -ml-2 -mt-2 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full animate-pulse shadow-lg shadow-blue-500/50"></div>
 
                     {/* Scanning lines */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse"></div>
+                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-indigo-400 to-transparent animate-pulse"></div>
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center rotate-90">
-                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-pulse delay-300"></div>
+                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-pulse delay-300"></div>
                     </div>
 
                     {/* Floating particles */}
@@ -308,12 +328,12 @@ export default function FlowchartGenerator() {
 
                   {/* Loading text */}
                   <div className="absolute bottom-20 text-center">
-                    <div className="text-cyan-400 font-mono text-sm mb-2 animate-pulse">Rendering Flowchart...</div>
+                    <div className="text-blue-400 font-mono text-sm mb-2 animate-pulse">Rendering Flowchart...</div>
                     <div className="flex space-x-1 justify-center">
                       {[...Array(3)].map((_, i) => (
                         <div
                           key={i}
-                          className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+                          className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
                           style={{ animationDelay: `${i * 200}ms` }}
                         ></div>
                       ))}
@@ -326,7 +346,7 @@ export default function FlowchartGenerator() {
               {error && !isAnimating && (
                 <div className="text-center animate-fadeIn">
                   <div className="text-red-400 mb-2">⚠️ Render Error</div>
-                  <pre className="text-red-300 text-sm bg-red-900/20 p-4 rounded border border-red-800/50 max-w-md">
+                  <pre className="text-red-500 text-sm bg-red-50/20 p-4 rounded border border-red-300 max-w-md">
                     {error}
                   </pre>
                 </div>
@@ -341,50 +361,50 @@ export default function FlowchartGenerator() {
 
               {/* Empty State */}
               {!renderedSvg && !error && !isAnimating && (
-                <div className="text-slate-400 text-center animate-fadeIn">
+                <div className="text-gray-600 text-center animate-fadeIn">
                   <div className="text-4xl mb-4 animate-bounce">📊</div>
-                  <p>Your flowchart will appear here</p>
-                  <div className="mt-4 text-xs text-slate-500">Generate or edit code to see the magic happen</div>
+                  <p className="text-black">Your flowchart will appear here</p>
+                  <div className="mt-4 text-xs text-black">Generate or edit code to see the magic happen</div>
                 </div>
               )}
             </div>
           </div>
         </div>
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 shadow-2xl mb-6">
+        <div className="bg-gray-50/80 backdrop-blur-xl border border-gray-300 rounded-xl p-6 shadow-2xl mb-6">
           <div className="flex items-center mb-4">
-            <Info className="h-6 w-6 text-blue-400 mr-3" />
-            <h2 className="text-xl font-semibold text-white">About Flowcharts</h2>
+            <Info className="h-6 w-6 text-black mr-3" />
+            <h2 className="text-xl font-semibold text-black">About Flowcharts</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-black leading-relaxed">
                 Flowcharts are visual representations of processes, workflows, or algorithms. They use standardized
                 symbols to show the sequence of steps, decision points, and flow of control, making complex processes
                 easy to understand and communicate.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <GitBranch className="h-8 w-8 text-emerald-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Process Steps</h3>
-                  <p className="text-sm text-slate-400">Sequential actions or operations</p>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-300">
+                  <GitBranch className="h-8 w-8 text-black mb-2" />
+                  <h3 className="font-semibold text-black mb-1">Process Steps</h3>
+                  <p className="text-sm text-black">Sequential actions or operations</p>
                 </div>
-                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <Diamond className="h-8 w-8 text-blue-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Decision Points</h3>
-                  <p className="text-sm text-slate-400">Conditional branches and choices</p>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-300">
+                  <Diamond className="h-8 w-8 text-black mb-2" />
+                  <h3 className="font-semibold text-black mb-1">Decision Points</h3>
+                  <p className="text-sm text-black">Conditional branches and choices</p>
                 </div>
-                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-                  <ArrowRight className="h-8 w-8 text-purple-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Flow Direction</h3>
-                  <p className="text-sm text-slate-400">Sequence and connections</p>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-300">
+                  <ArrowRight className="h-8 w-8 text-black mb-2" />
+                  <h3 className="font-semibold text-black mb-1">Flow Direction</h3>
+                  <p className="text-sm text-black">Sequence and connections</p>
                 </div>
               </div>
             </div>
-            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600/30">
-              <h3 className="font-semibold text-white mb-3">Common Use Cases:</h3>
-              <ul className="space-y-2 text-slate-300">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-300">
+              <h3 className="font-semibold text-black mb-3">Common Use Cases:</h3>
+              <ul className="space-y-2 text-black">
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
                   Business process mapping
                 </li>
                 <li className="flex items-center">
@@ -392,19 +412,19 @@ export default function FlowchartGenerator() {
                   Software development workflows
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
                   Algorithm visualization
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
                   Decision trees
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-pink-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
                   User journey mapping
                 </li>
                 <li className="flex items-center">
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-3"></span>
                   Quality control processes
                 </li>
               </ul>
@@ -413,27 +433,27 @@ export default function FlowchartGenerator() {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-8 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl p-6 text-center shadow-2xl">
+        <div className="mt-8 bg-gray-50/80 backdrop-blur-xl border border-gray-300 rounded-xl p-6 text-center shadow-2xl">
           <div className="max-w-2xl mx-auto">
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-black mb-2">
               <GradientText>⚡ Ultra-Fast AI-Powered Flowchart Generation</GradientText>
             </h3>
-            <p className="text-slate-300 mb-4">
+            <p className="text-black mb-4">
               Create professional flowcharts instantly using GurukulX's model. Simply describe your
               process, and watch as AI generates beautiful Mermaid diagrams with enhanced styling.
             </p>
             <div className="flex items-center justify-center space-x-6 text-sm">
-              <div className="flex items-center text-emerald-400">
-                <span className="w-1 h-1 bg-emerald-400 rounded-full mr-2"></span>
+              <div className="flex items-center text-black">
+                <span className="w-1 h-1 bg-blue-400 rounded-full mr-2"></span>
                 GurukulX-1.0
               </div>
-              <div className="flex items-center text-indigo-400">
-                <span className="w-1 h-1 bg-indigo-400 rounded-full mr-2"></span>
+              <div className="flex items-center text-black">
+                <span className="w-1 h-1 bg-blue-400 rounded-full mr-2"></span>
                 Real-time Preview
               </div>
-              <div className="flex items-center text-purple-400">
-                <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
-                SVG Export
+              <div className="flex items-center text-black">
+                <span className="w-1 h-1 bg-blue-400 rounded-full mr-2"></span>
+                PNG Export
               </div>
             </div>
           </div>
@@ -483,11 +503,11 @@ export default function FlowchartGenerator() {
       .diagram-container svg rect,
       .diagram-container svg polygon,
       .diagram-container svg circle {
-        filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.3));
+        filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.3));
       }
       
       .diagram-container svg path[stroke] {
-        filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.4));
+        filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.4));
       }
     `}</style>
     </div>
