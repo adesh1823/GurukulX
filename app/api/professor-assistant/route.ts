@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Select model based on thinkingMode
-    const model = thinkingMode ? "llama3-70b-8192" : "llama3-70b-8192";
+    const model = thinkingMode ? "llama3.1-8b-instant" : "llama3.1-8b-instant";
 
     // Call Groq API
     const completion = await groq.chat.completions.create({
