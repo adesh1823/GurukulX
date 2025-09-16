@@ -358,10 +358,10 @@ export default function TTSLearningPage() {
   const selectedLangData = languages.find((lang) => lang.code === selectedLanguage);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-900 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-teal-500/20 rounded-full blur-xl"
+          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-500/10 to-teal-500/10 rounded-full blur-xl"
           animate={{
             x: [0, 100, 0],
             y: [0, -50, 0],
@@ -374,7 +374,7 @@ export default function TTSLearningPage() {
           }}
         />
         <motion.div
-          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-xl"
+          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full blur-xl"
           animate={{
             x: [0, -80, 0],
             y: [0, 60, 0],
@@ -387,7 +387,7 @@ export default function TTSLearningPage() {
           }}
         />
         <motion.div
-          className="absolute bottom-20 left-1/3 w-40 h-40 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full blur-xl"
+          className="absolute bottom-20 left-1/3 w-40 h-40 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-full blur-xl"
           animate={{
             x: [0, 120, 0],
             y: [0, -80, 0],
@@ -411,25 +411,25 @@ export default function TTSLearningPage() {
             >
               <Speaker className="w-8 h-8 text-white" />
             </motion.div>
-            <h1 className="text-4xl md:text-5xl font-bold ">
-              <GradientText> AI-Read Learning Material</GradientText><span className="text-yellow-500"> (Beta)</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-black">
+              <GradientText> AI-Read Learning Material</GradientText><span className="text-orange-500"> (Beta)</span>
             </h1>
           </div>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Transform your educational content into engaging <span className="text-green-500">audio experiences</span> with AI-powered processing and
+          <p className="text-xl text-black max-w-3xl mx-auto">
+            Transform your educational content into engaging <span className="text-green-600 font-medium">audio experiences</span> with AI-powered processing and
             multilingual text-to-speech
           </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="glass-effect border-blue-500/20 h-full">
+            <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-lg h-full">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <FileText className="w-5 h-5" />
                   Input Learning Material
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-gray-700">
                   Upload a text file or paste your educational content
                 </CardDescription>
               </CardHeader>
@@ -438,29 +438,43 @@ export default function TTSLearningPage() {
                   <Button
                     onClick={() => fileInputRef.current?.click()}
                     variant="outline"
-                    className="w-full border-blue-500/30 hover:border-blue-500/50 hover:bg-blue-500/10"
+                    className="w-full !bg-white !border !border-black hover:!border-blue-500 hover:!bg-blue-50 !text-black"
+                    style={{
+                      backgroundColor: '#ffffff !important',
+                      color: '#000000 !important',
+                      borderColor: '#000000 !important',
+                      borderWidth: '1px !important',
+                      borderStyle: 'solid !important'
+                    }}
                   >
-                    <Upload className="w-4 h-4 mr-2" />
+                    <Upload className="w-4 h-4 mr-2 text-black" />
                     Upload Text File
                   </Button>
                   <input ref={fileInputRef} type="file" accept=".txt" onChange={handleFileUpload} className="hidden" />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-300">Or paste your text here:</label>
+                  <label className="text-sm font-medium text-black">Or paste your text here:</label>
                   <Textarea
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     placeholder="Enter your lesson content, articles, or notes here..."
-                    className="min-h-[200px] bg-black/20 border-blue-500/30 text-white placeholder:text-gray-400 resize-none"
+                    className="min-h-[200px] !bg-white !border !border-black !text-black placeholder:!text-gray-500 resize-none focus:!border-blue-500 focus:!ring-1 focus:!ring-blue-500"
+                    style={{
+                      backgroundColor: '#ffffff !important',
+                      color: '#000000 !important',
+                      borderColor: '#000000 !important',
+                      borderWidth: '1px !important',
+                      borderStyle: 'solid !important'
+                    }}
                   />
-                  <div className="text-xs text-gray-400 text-right">{inputText.length} characters</div>
+                  <div className="text-xs text-gray-600 text-right">{inputText.length} characters</div>
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-sm font-medium text-gray-300">Select Language</label>
+                  <label className="text-sm font-medium text-black">Select Language</label>
                   <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                    <SelectTrigger className="bg-black/20 border-blue-500/30">
+                    <SelectTrigger className="bg-white border-gray-300 text-black">
                       <SelectValue placeholder="Choose a language" />
                     </SelectTrigger>
                     <SelectContent>
@@ -468,7 +482,7 @@ export default function TTSLearningPage() {
                         <SelectItem key={lang.code} value={lang.code}>
                           <div className="flex items-center gap-2">
                             <span>{lang.flag}</span>
-                            <span>{lang.name}</span>
+                            <span className="text-black">{lang.name}</span>
                           </div>
                         </SelectItem>
                       ))}
@@ -479,7 +493,7 @@ export default function TTSLearningPage() {
                 <Button
                   onClick={processText}
                   disabled={!inputText.trim() || !selectedLanguage || processingState.isProcessing}
-                  className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600"
+                  className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white"
                 >
                   {processingState.isProcessing ? (
                     <>
@@ -503,8 +517,8 @@ export default function TTSLearningPage() {
                       className="space-y-2"
                     >
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-300">{processingState.stage}</span>
-                        <span className="text-purple-400">{processingState.progress}%</span>
+                        <span className="text-black">{processingState.stage}</span>
+                        <span className="text-purple-600">{processingState.progress}%</span>
                       </div>
                       <Progress value={processingState.progress} className="h-2" />
                     </motion.div>
@@ -515,26 +529,26 @@ export default function TTSLearningPage() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-            <Card className="glass-effect border-blue-500/20 h-full">
+            <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-lg h-full">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
+                <CardTitle className="flex items-center gap-2 text-black">
                   <Sparkles className="w-5 h-5" />
                   Processed Content
                 </CardTitle>
-                <CardDescription className="text-gray-300">
+                <CardDescription className="text-gray-700">
                   AI-enhanced and optimized for audio narration
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {processedText ? (
                   <div className="space-y-4">
-                    <div className="bg-black/20 border border-blue-500/30 rounded-lg p-4 max-h-[400px] overflow-y-auto">
-                      <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">{processedText}</p>
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-h-[400px] overflow-y-auto">
+                      <p className="text-black text-sm leading-relaxed whitespace-pre-wrap">{processedText}</p>
                     </div>
-                    <div className="text-xs text-gray-400 text-right">{processedText.length} characters processed</div>
+                    <div className="text-xs text-gray-600 text-right">{processedText.length} characters processed</div>
                   </div>
                 ) : (
-                  <div className="text-center py-12 text-gray-400">
+                  <div className="text-center py-12 text-gray-500">
                     <Brain className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>Process your text to see the AI-enhanced version here</p>
                   </div>
@@ -553,22 +567,22 @@ export default function TTSLearningPage() {
               transition={{ delay: 0.6 }}
               className="mt-8"
             >
-              <Card className="glass-effect border-green-500/20">
+              <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
+                  <CardTitle className="flex items-center gap-2 text-black">
                     <Languages className="w-5 h-5" />
                     Audio Generation Settings
                   </CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-gray-700">
                     Customize language and emotional tone for your audio
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <label className="text-sm font-medium text-gray-300">Select Language</label>
+                      <label className="text-sm font-medium text-black">Select Language</label>
                       <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-                        <SelectTrigger className="bg-black/20 border-green-500/30">
+                        <SelectTrigger className="bg-white border-gray-300 text-black">
                           <SelectValue placeholder="Choose a language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -576,7 +590,7 @@ export default function TTSLearningPage() {
                             <SelectItem key={lang.code} value={lang.code}>
                               <div className="flex items-center gap-2">
                                 <span>{lang.flag}</span>
-                                <span>{lang.name}</span>
+                                <span className="text-black">{lang.name}</span>
                               </div>
                             </SelectItem>
                           ))}
@@ -585,7 +599,7 @@ export default function TTSLearningPage() {
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-sm font-medium text-gray-300">Emotional Tone</label>
+                      <label className="text-sm font-medium text-black">Emotional Tone</label>
                       <div className="grid grid-cols-3 gap-2">
                         {emotionalTones.map((tone) => {
                           const Icon = tone.icon;
@@ -595,26 +609,26 @@ export default function TTSLearningPage() {
                               onClick={() => setSelectedTone(tone.id)}
                               className={`p-3 rounded-lg border transition-all ${
                                 selectedTone === tone.id
-                                  ? "border-white bg-white/10"
-                                  : "border-gray-600 hover:border-gray-400"
+                                  ? "border-blue-500 bg-blue-50"
+                                  : "border-gray-300 hover:border-gray-400"
                               }`}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
-                              <Icon className="w-5 h-5 mx-auto mb-1 text-white" />
-                              <div className="text-xs text-gray-300">{tone.name}</div>
+                              <Icon className="w-5 h-5 mx-auto mb-1 text-black" />
+                              <div className="text-xs text-black">{tone.name}</div>
                             </motion.button>
                           );
                         })}
                       </div>
-                      {selectedToneData && <p className="text-xs text-gray-400">{selectedToneData.description}</p>}
+                      {selectedToneData && <p className="text-xs text-gray-600">{selectedToneData.description}</p>}
                     </div>
                   </div>
 
                   <Button
                     onClick={generateAudio}
                     disabled={processingState.isGeneratingAudio || !selectedLanguage}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
                   >
                     {processingState.isGeneratingAudio ? (
                       <>
@@ -638,8 +652,8 @@ export default function TTSLearningPage() {
                         className="space-y-2"
                       >
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-300">{processingState.stage}</span>
-                          <span className="text-green-400">{processingState.progress}%</span>
+                          <span className="text-black">{processingState.stage}</span>
+                          <span className="text-green-600">{processingState.progress}%</span>
                         </div>
                         <Progress value={processingState.progress} className="h-2" />
                       </motion.div>
@@ -660,13 +674,13 @@ export default function TTSLearningPage() {
               transition={{ delay: 0.8 }}
               className="mt-8"
             >
-              <Card className="glass-effect border-orange-500/20">
+              <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white">
+                  <CardTitle className="flex items-center gap-2 text-black">
                     <Volume2 className="w-5 h-5" />
                     Audio Player
                   </CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-gray-700">
                     Listen to your AI-generated learning material
                   </CardDescription>
                 </CardHeader>
@@ -688,13 +702,13 @@ export default function TTSLearningPage() {
                     <Button
                       onClick={togglePlayPause}
                       size="lg"
-                      className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                      className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
                     >
                       {audioState.isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                     </Button>
 
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-center justify-between text-sm text-gray-300">
+                      <div className="flex items-center justify-between text-sm text-black">
                         <span>{formatTime(audioState.currentTime)}</span>
                         <span>{formatTime(audioState.duration)}</span>
                       </div>
@@ -705,14 +719,14 @@ export default function TTSLearningPage() {
                       onClick={downloadAudio}
                       variant="outline"
                       size="lg"
-                      className="border-orange-500/30 hover:border-orange-500/50 hover:bg-orange-500/10"
+                      className="border-gray-300 hover:border-orange-500 hover:bg-orange-50 text-black"
                     >
                       <Download className="w-5 h-5" />
                     </Button>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <Volume2 className="w-4 h-4 text-gray-400" />
+                    <Volume2 className="w-4 h-4 text-gray-600" />
                     <Slider
                       value={volume}
                       onValueChange={(value) => {
@@ -725,17 +739,17 @@ export default function TTSLearningPage() {
                       step={1}
                       className="flex-1"
                     />
-                    <span className="text-sm text-gray-400 w-12">{volume[0]}%</span>
+                    <span className="text-sm text-gray-600 w-12">{volume[0]}%</span>
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="border-orange-500/30">
+                    <Badge variant="outline" className="border-gray-300 text-black">
                       {selectedLangData?.flag} {selectedLangData?.name}
                     </Badge>
-                    <Badge variant="outline" className="border-orange-500/30">
+                    <Badge variant="outline" className="border-gray-300 text-black">
                       {selectedToneData?.name} Tone
                     </Badge>
-                    <Badge variant="outline" className="border-orange-500/30">
+                    <Badge variant="outline" className="border-gray-300 text-black">
                       {Math.round(audioState.duration)}s Duration
                     </Badge>
                   </div>
