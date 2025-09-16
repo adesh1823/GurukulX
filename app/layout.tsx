@@ -9,7 +9,7 @@ import Header from "@/components/header"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "TeachAI - AI-Powered Teaching Assistant for Indian Colleges",
+  title: "GurukulX - AI-Powered Teaching Assistant for Indian Colleges",
   description: "Empower educators with AI-driven tools for lesson planning, content generation, and student engagement",
 }
 

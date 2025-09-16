@@ -15,9 +15,8 @@ export default function Header() {
   const navItems = [
     { name: "Voicebot", href: "/Voicebot", icon: Users },
     { name: "AI Reader", href: "/ai-assistants/tts", icon: BookOpen },
-    
-    { name: "Mindmap", href: "/research-support/mindmap", icon: Users },
-    { name: "Research Support", href: "/research-support", icon: FileText },
+    { name: "Flowchart", href: "/research-support/flowchart", icon: Users },
+    { name: "Question Paper", href: "/student-engagement/chatbot", icon: FileText },
     { name: "Coding Assistant", href: "/ai-assistants/coding", icon: Bot },
     { name: "Pricing", href: "/pricing", icon: DollarSign },
     { name: "Developer Portfolio", href: "https://arav-portfolio.vercel.app/", icon: Globe, external: true },
