@@ -163,7 +163,7 @@ const EducationalAssistantPage: React.FC = () => {
     try {
       const userName = `student-${Math.random().toString(36).substring(7)}`
       const response = await fetch(
-        `https://aravsaxena884-GurukulVoice.hf.space/getToken?name=${encodeURIComponent(userName)}`,
+        `https://aravsaxena884-voiceLegal.hf.space/getToken?name=${encodeURIComponent(userName)}`,
       )
 
       if (!response.ok) {
@@ -204,7 +204,7 @@ const EducationalAssistantPage: React.FC = () => {
           </a>
 
           <LiveKitRoom
-            serverUrl="wss://gurulx-50c3aqbk.livekit.cloud"
+            serverUrl="wss://app-zq7e4mya.livekit.cloud"
             token={token}
             connect={true}
             video={false}
