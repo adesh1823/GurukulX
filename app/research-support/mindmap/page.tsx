@@ -194,21 +194,21 @@ export default function MindmapGenerator() {
       <header className="border-b border-orange-600/50 backdrop-blur-xl bg-orange-50/80 p-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500 to-green-500 text-black flex items-center justify-center font-bold text-lg shadow-lg">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500 to-green-500 text-blackblack flex items-center justify-center font-bold text-blacklg shadow-lg">
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-5xl font-bold text-center">
-                <GradientText>GX Mindmap Generator</GradientText><span className="text-green-500"> (Beta)</span>
+              <h1 className="text-black5xl font-bold text-blackcenter">
+                <GradientText>GX Mindmap Generator</GradientText><span className="text-blackgreen-500"> (Beta)</span>
               </h1>
-              <p className="text-sm text-black">Powered by GurukulX-1.0</p>
+              <p className="text-blacksm text-blackblack">Powered by GurukulX-1.0</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Button
               onClick={exportSvg}
               variant="outline"
-              className="bg-orange-50/80 border-orange-600/50 text-black hover:bg-orange-50/80"
+              className="bg-orange-50/80 border-orange-600/50 text-blackblack hover:bg-orange-50/80"
             >
               <Download className="h-4 w-4 mr-2" />
               Export SVG
@@ -227,7 +227,7 @@ export default function MindmapGenerator() {
           <div className="space-y-6">
             {/* AI Prompt Section */}
             <div className="bg-orange-50/80 backdrop-blur-xl border border-orange-600/50 rounded-xl p-6 shadow-2xl">
-              <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <h2 className="text-blacklg font-semibold text-blackwhite mb-4 flex items-center">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 animate-pulse"></span>
                 AI Prompt
               </h2>
@@ -236,12 +236,12 @@ export default function MindmapGenerator() {
                   placeholder="Describe your mindmap (e.g., machine learning concepts, project management workflow...)"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="bg-orange-50/80 border-orange-600/50 text-black placeholder-orange-400 focus:border-emerald-400"
+                  className="bg-orange-50/80 border-orange-600/50 text-blackblack placeholder-orange-400 focus:border-emerald-400"
                 />
                 <Button
                   onClick={generateDiagram}
                   disabled={isGenerating || !prompt.trim()}
-                  className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-black border-0 shadow-lg"
+                  className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-blackblack border-0 shadow-lg"
                 >
                   {isGenerating ? (
                     <>
@@ -261,7 +261,7 @@ export default function MindmapGenerator() {
             {/* Code Editor Section */}
             <div className="bg-orange-50/80 backdrop-blur-xl border border-orange-600/50 rounded-xl p-6 shadow-2xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-white flex items-center">
+                <h2 className="text-blacklg font-semibold text-blackwhite flex items-center">
                   <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 animate-pulse"></span>
                   Mermaid Code
                 </h2>
@@ -269,7 +269,7 @@ export default function MindmapGenerator() {
                   onClick={copyCode}
                   variant="outline"
                   size="sm"
-                  className="bg-orange-50/80 border-orange-600/50 text-black hover:bg-orange-50/80"
+                  className="bg-orange-50/80 border-orange-600/50 text-blackblack hover:bg-orange-50/80"
                 >
                   <Copy className="h-4 w-4 mr-2" />
                   Copy
@@ -279,14 +279,14 @@ export default function MindmapGenerator() {
                 value={mermaidCode}
                 onChange={(e) => handleCodeChange(e.target.value)}
                 placeholder="Enter your Mermaid mindmap code here..."
-                className="min-h-[400px] font-mono text-sm bg-orange-50/80 border-orange-600/50 text-black-200 placeholder-orange-400 focus:border-emerald-400"
+                className="min-h-[400px] font-mono text-blacksm bg-orange-50/80 border-orange-600/50 text-blackblack-200 placeholder-orange-400 focus:border-emerald-400"
               />
             </div>
           </div>
 
           {/* Right Panel - Preview */}
           <div className="bg-orange-50/80 backdrop-blur-xl border border-orange-600/50 rounded-xl p-6 shadow-2xl">
-            <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
+            <h2 className="text-blacklg font-semibold text-blackwhite mb-4 flex items-center">
               <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3 animate-pulse"></span>
               Mindmap Preview
             </h2>
@@ -330,8 +330,8 @@ export default function MindmapGenerator() {
                   </div>
 
                   {/* Loading text */}
-                  <div className="absolute bottom-20 text-center">
-                    <div className="text-cyan-400 font-mono text-sm mb-2 animate-pulse">Rendering Mindmap...</div>
+                  <div className="absolute bottom-20 text-blackcenter">
+                    <div className="text-blackcyan-400 font-mono text-blacksm mb-2 animate-pulse">Rendering Mindmap...</div>
                     <div className="flex space-x-1 justify-center">
                       {[...Array(3)].map((_, i) => (
                         <div
@@ -347,9 +347,9 @@ export default function MindmapGenerator() {
 
               {/* Error State */}
               {error && !isAnimating && (
-                <div className="text-center animate-fadeIn">
-                  <div className="text-red-400 mb-2">⚠️ Render Error</div>
-                  <pre className="text-red-300 text-sm bg-red-50/20 p-4 rounded border border-red-600/50 max-w-md">
+                <div className="text-blackcenter animate-fadeIn">
+                  <div className="text-blackred-400 mb-2">⚠️ Render Error</div>
+                  <pre className="text-blackred-300 text-blacksm bg-red-50/20 p-4 rounded border border-red-600/50 max-w-md">
                     {error}
                   </pre>
                 </div>
@@ -364,10 +364,10 @@ export default function MindmapGenerator() {
 
               {/* Empty State */}
               {!renderedSvg && !error && !isAnimating && (
-                <div className="text-black-400 text-center animate-fadeIn">
-                  <div className="text-4xl mb-4 animate-bounce">🧠</div>
+                <div className="text-blackblack-400 text-blackcenter animate-fadeIn">
+                  <div className="text-black4xl mb-4 animate-bounce">🧠</div>
                   <p>Your mindmap will appear here</p>
-                  <div className="mt-4 text-xs text-black-500">Generate or edit code to see the magic happen</div>
+                  <div className="mt-4 text-blackxs text-blackblack-500">Generate or edit code to see the magic happen</div>
                 </div>
               )}
             </div>
@@ -375,37 +375,37 @@ export default function MindmapGenerator() {
         </div>
         <div className="bg-transparent backdrop-blur-xl border border-orange-600/50 rounded-xl p-6 shadow-2xl mb-6">
           <div className="flex items-center mb-4">
-            <Info className="h-6 w-6 text-black-400 mr-3" />
-            <h2 className="text-xl font-semibold text-white">About Mindmaps</h2>
+            <Info className="h-6 w-6 text-blackblack-400 mr-3" />
+            <h2 className="text-blackxl font-semibold text-blackblack">About Mindmaps</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <p className="text-black-400 leading-relaxed">
+              <p className="text-blackblack-400 leading-relaxed">
                 Mindmaps are visual thinking tools that help organize information hierarchically around a central
                 concept. They mirror how our brains naturally process information, making them perfect for
                 brainstorming, note-taking, project planning, and knowledge mapping.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-transparent rounded-lg p-4 border border-orange-600/30">
-                  <Brain className="h-8 w-8 text-emerald-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Central Topic</h3>
-                  <p className="text-sm text-black-400">Main idea at the center</p>
+                  <Brain className="h-8 w-8 text-blackblack-400 mb-2" />
+                  <h3 className="font-semibold text-blackblack mb-1">Central Topic</h3>
+                  <p className="text-blacksm text-blackblack-400">Main idea at the center</p>
                 </div>
                 <div className="bg-transparent rounded-lg p-4 border border-orange-600/30">
-                  <Network className="h-8 w-8 text-black-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Branches</h3>
-                  <p className="text-sm text-black-400">Related subtopics radiating out</p>
+                  <Network className="h-8 w-8 text-blackblack-400 mb-2" />
+                  <h3 className="font-semibold text-blackblack mb-1">Branches</h3>
+                  <p className="text-blacksm text-blackblack-400">Related subtopics radiating out</p>
                 </div>
                 <div className="bg-transparent rounded-lg p-4 border border-orange-600/30">
-                  <Lightbulb className="h-8 w-8 text-purple-400 mb-2" />
-                  <h3 className="font-semibold text-white mb-1">Keywords</h3>
-                  <p className="text-sm text-black-400">Key concepts and ideas</p>
+                  <Lightbulb className="h-8 w-8 text-blackpurple-400 mb-2" />
+                  <h3 className="font-semibold text-blackwhite mb-1">Keywords</h3>
+                  <p className="text-blacksm text-blackblack-400">Key concepts and ideas</p>
                 </div>
               </div>
             </div>
             <div className="bg-transparent rounded-lg p-4 border border-orange-600/30">
-              <h3 className="font-semibold text-white mb-3">Perfect for:</h3>
-              <ul className="space-y-2 text-black-400">
+              <h3 className="font-semibold text-blackwhite mb-3">Perfect for:</h3>
+              <ul className="space-y-2 text-blackblack-400">
                 <li className="flex items-center">
                   <span className="w-2 h-2 bg-emerald-400 rounded-full mr-3"></span>
                   Brainstorming sessions
@@ -436,25 +436,25 @@ export default function MindmapGenerator() {
         </div>
 
         {/* Footer Info */}
-        <div className="mt-8 bg-transparent backdrop-blur-xl border border-orange-600/50 rounded-xl p-6 text-center shadow-2xl">
+        <div className="mt-8 bg-transparent backdrop-blur-xl border border-orange-600/50 rounded-xl p-6 text-blackcenter shadow-2xl">
           <div className="max-w-2xl mx-auto">
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-blacklg font-semibold text-blackwhite mb-2">
               <GradientText>⚡ Ultra-Fast AI-Powered Mindmap Generation</GradientText>
             </h3>
-            <p className="text-black-300 mb-4">
+            <p className="text-blackblack-300 mb-4">
               Create professional mindmaps instantly using GurukulX's lightning-fast model. Simply describe your
               concept, and watch as AI generates beautiful Mermaid mindmaps with enhanced styling.
             </p>
-            <div className="flex items-center justify-center space-x-6 text-sm">
-              <div className="flex items-center text-emerald-400">
+            <div className="flex items-center justify-center space-x-6 text-blacksm">
+              <div className="flex items-center text-blackemerald-400">
                 <span className="w-1 h-1 bg-emerald-400 rounded-full mr-2"></span>
                 GurukulX-1.0
               </div>
-              <div className="flex items-center text-indigo-400">
+              <div className="flex items-center text-blackindigo-400">
                 <span className="w-1 h-1 bg-indigo-400 rounded-full mr-2"></span>
                 Real-time Preview
               </div>
-              <div className="flex items-center text-purple-400">
+              <div className="flex items-center text-blackpurple-400">
                 <span className="w-1 h-1 bg-purple-400 rounded-full mr-2"></span>
                 SVG Export
               </div>
